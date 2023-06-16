@@ -22,7 +22,7 @@ tasks:
     aliases:
       - "vet"
     cmds:
-      - go vet ./pkg/*
+      - go vet ./internal/*
       - go vet ./cmd/*
     silent: true
 
@@ -32,7 +32,7 @@ tasks:
       - "rv"
       - "revive"
     cmds:
-      - revive -config revive.toml -formatter friendly ./pkg/*
+      - revive -config revive.toml -formatter friendly ./internal/*
       - revive -config revive.toml -formatter friendly ./cmd/*
     silent: true
 
@@ -45,22 +45,22 @@ tasks:
     silent: true
 
   # Test
-  test:pkg:parser:
+  test:internal:parser:
     desc: Run tests for parser package
     aliases:
       - "test:parser"
-    dir: ./pkg/parser
+    dir: ./internal/parser
     cmds:
       - go test -v
       - go test -cover
     silent: true
 
-  test:pkg:all:
+  test:internal:all:
     desc: Run all tests for all packages
     aliases:
       - "test:all"
     cmds:
-      - task test:pkg:parser
+      - task test:internal:parser
     silent: true
 
   # Build
@@ -91,7 +91,7 @@ tasks:
       - "complete"
     cmds:
       - printf "\n---------- LINT -----------\n\n" && task lint:all && printf "\n\n"
-      - printf "---------- TEST -----------\n\n" && task test:pkg:all && printf "\n\n"
+      - printf "---------- TEST -----------\n\n" && task test:internal:all && printf "\n\n"
       - printf "---------- BUILD ----------\n\n" && task build:bruh && printf "\n\n"
       - printf "---------- RUN ------------\n\n" && task run:bruh && printf "\n\n"
       - printf "---------- CLEAN ----------\n\n" && task clean && printf "\n\n"
