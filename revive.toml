@@ -1,0 +1,47 @@
+ignoreGeneratedHeader = false
+severity = "warning"
+confidence = 0.8
+errorCode = 1
+warningCode = 1
+
+# Enable all available rules
+enableAllRules = true
+
+# Disabled rules
+[rule.file-header]
+    Disabled = true
+[rule.function-length]
+    Disabled = true
+[rule.banned-characters]
+    Disabled = true
+
+
+# Rule tuning
+
+## Complexity
+[rule.cyclomatic]
+    Arguments = [9]
+[rule.cognitive-complexity]
+    Arguments = [9]
+
+## Argument limit
+[rule.argument-limit]
+    Arguments = [5]
+[rule.function-result-limit]
+    Arguments = [3]
+
+## Max elements
+[rule.max-public-structs]
+    Arguments =[3]
+
+## Length
+[rule.line-length-limit]
+    Arguments = [150]
+
+## Constants
+[rule.add-constant]
+    Arguments = [ { maxLitCount = "4" } ]
+
+## Error handling
+[rule.unhandled-error]
+    Arguments =["fmt.Printf", "fmt.Println"]
