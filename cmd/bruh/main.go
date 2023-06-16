@@ -19,7 +19,7 @@ func main() {
 		fmt.Printf("  Version: %s\n", result.Version)
 	}
 
-	file := "/Users/galano/Developer/Christos/Application/Go/go-development/bicep/modules/compute.bicep"
+	file := "/Users/galano/go/src/github.com/christosgalano/bruh/pkg/parser/testdata/bicep/modules/compute.bicep"
 	fileResults, err := parser.ParseFile(file)
 	if err != nil {
 		log.Fatalf("Parser error: %s", err)
@@ -31,7 +31,7 @@ func main() {
 
 	fmt.Printf("\n\n")
 
-	dir := "/Users/galano/Developer/Christos/Application/Go/go-development/bicep"
+	dir := "/Users/galano/go/src/github.com/christosgalano/bruh/pkg/parser/testdata/bicep"
 	dirResults, err := parser.ParseDir(dir)
 	if err != nil {
 		log.Fatalf("Parser error: %s", err)
