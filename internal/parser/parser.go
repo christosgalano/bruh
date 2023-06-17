@@ -25,23 +25,22 @@ type ResourceInfo struct {
 }
 
 // ValidateBicepFile validates that a file exists has the .bicep extension.
-func ValidateBicepFile(filename string) error {
-	if _, err := os.Stat(filename); err != nil {
+// If the file does not exist, is a directory, or does not have the .bicep extension,
+// an error is returned.
+func ValidateBicepFile(path string) error {
+	f, err := os.Stat(path)
+	if err != nil {
 		return err
 	}
 
-	if ext := filepath.Ext(filename); ext != ".bicep" {
+	if f.IsDir() {
+		return fmt.Errorf("given path is a directory: %s", path)
+	}
+
+	if ext := filepath.Ext(path); ext != ".bicep" {
 		return fmt.Errorf("invalid file extension: %s", ext)
 	}
 	return nil
-}
-
-// IsBicepFile returns true if the file has the .bicep extension.
-func IsBicepFile(filename string) bool {
-	if ext := filepath.Ext(filename); ext == ".bicep" {
-		return true
-	}
-	return false
 }
 
 // ParseFile parses a file and returns a slice of ResourceInfo.
@@ -84,7 +83,8 @@ func ParseDir(dir string) (map[string][]ResourceInfo, error) {
 			return err
 		}
 
-		if d.IsDir() || !IsBicepFile(path) {
+		// Skip directories and non-bicep files
+		if ValidateBicepFile(path) != nil {
 			return nil
 		}
 
