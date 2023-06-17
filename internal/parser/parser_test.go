@@ -34,40 +34,16 @@ func TestValidateBicepFile(t *testing.T) {
 			args{"testdata/bicep/non-existent-file"},
 			true,
 		},
+		{
+			"directory",
+			args{"testdata/bicep"},
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.testname, func(t *testing.T) {
 			if err := ValidateBicepFile(tt.args.filename); (err != nil) != tt.wantErr {
 				t.Errorf("ValidateBicepFile() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func TestIsBicepFile(t *testing.T) {
-	type args struct {
-		filename string
-	}
-	tests := []struct {
-		testname string
-		args     args
-		want     bool
-	}{
-		{
-			"valid-bicep-file",
-			args{azureDeployBicepFile},
-			true,
-		},
-		{
-			"invalid-bicep-file",
-			args{azureDeployParametersFile},
-			false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.testname, func(t *testing.T) {
-			if got := IsBicepFile(tt.args.filename); got != tt.want {
-				t.Errorf("IsBicepFile() = %v, want %v", got, tt.want)
 			}
 		})
 	}
