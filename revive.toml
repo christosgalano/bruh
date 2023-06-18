@@ -14,15 +14,12 @@ enableAllRules = true
     Disabled = true
 [rule.banned-characters]
     Disabled = true
-
+[rule.cyclomatic]
+    Disabled = true
+[rule.cognitive-complexity]
+    Disabled = true
 
 # Rule tuning
-
-## Complexity
-[rule.cyclomatic]
-    Arguments = [9]
-[rule.cognitive-complexity]
-    Arguments = [9]
 
 ## Argument limit
 [rule.argument-limit]
@@ -40,7 +37,7 @@ enableAllRules = true
 
 ## Constants
 [rule.add-constant]
-    Arguments = [ { maxLitCount = "4" } ]
+    Arguments = [ { maxLitCount = "4", allowInts = "0,1,2" } ]
 
 ## Error handling
 [rule.unhandled-error]

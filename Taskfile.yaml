@@ -45,11 +45,22 @@ tasks:
     silent: true
 
   # Test
-  test:internal:parser:
-    desc: Run tests for parser package
+  test:internal:parse:
+    desc: Run tests for parse package
     aliases:
-      - "test:parser"
-    dir: ./internal/parser
+      - "test:parse"
+    dir: ./internal/parse
+    cmds:
+      - go test -v
+      - go test -cover
+    silent: true
+
+  test:internal:azapiversions:
+    desc: Run tests for azapiversions package
+    aliases:
+      - "test:azapiversions"
+      - "test:azapi"
+    dir: ./internal/azapiversions
     cmds:
       - go test -v
       - go test -cover
@@ -60,7 +71,8 @@ tasks:
     aliases:
       - "test:all"
     cmds:
-      - task test:internal:parser
+      - printf "---------- parse ------------------\n\n" && task test:internal:parse && printf "\n\n"
+      - printf "---------- azapiversions -----------\n\n" && task test:internal:azapiversions && printf "\n\n"
     silent: true
 
   # Build
@@ -84,11 +96,11 @@ tasks:
       - ./cmd/bruh/bruh
     silent: true
 
-  # Complete
-  complete:bruh:
-    desc: Complete bruh
+  # All
+  all:
+    desc: Run all tasks in order
     aliases:
-      - "complete"
+      - "all"
     cmds:
       - printf "\n---------- LINT -----------\n\n" && task lint:all && printf "\n\n"
       - printf "---------- TEST -----------\n\n" && task test:internal:all && printf "\n\n"
