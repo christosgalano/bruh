@@ -1,53 +1,50 @@
 /*
-The bruh command line tool is a simple utility that parses Bicep files and directories
-and prints out the resources that are defined in them.
+TODO: add description
 */
 package main
 
 import (
 	"fmt"
 	"log"
+	"path/filepath"
 	"sync"
 
 	"github.com/christosgalano/bruh/internal/azapiversions"
-	"github.com/christosgalano/bruh/internal/parse"
+	"github.com/christosgalano/bruh/internal/bicep"
 	"github.com/christosgalano/bruh/internal/types"
 )
 
 func main() {
-	dir := "/Users/galano/Developer/Christos/Development/Go/bruh/internal/parse/testdata/bicep"
-	dirResults, err := parse.Directory(dir)
+	dir := "/Users/galano/Developer/Christos/Development/Go/bruh/testdata"
+	dirResults, err := bicep.ParseDirectory(dir)
 	if err != nil {
 		log.Fatalf("parse error: %s", err)
 	}
 
-	fmt.Printf("\nDirectory: %s\n", dir)
-	for filename, results := range dirResults {
-		fmt.Printf("\nFile: %s\n", filename)
-		for _, result := range results {
-			fmt.Println(result)
-		}
-	}
-	fmt.Printf("\n\n")
-
 	// Create a wait group to synchronize goroutines
 	var wg sync.WaitGroup
 
-	// Create a channel to receive the API versions
-	ch := make(chan types.ResourceInfo)
+	type info struct {
+		filename string
+		index    int
+		resource types.ResourceInfo
+	}
+
+	// Create a channel to receive the updated resource information
+	ch := make(chan types.UpdateResourceInfo)
 
 	// Launch a goroutine for each file's resources
 	for filename, resources := range dirResults {
 		wg.Add(1)
 		go func(filename string, resources []types.ResourceInfo) {
 			defer wg.Done()
-			for _, resource := range resources {
+			for index, resource := range resources {
 				versions, err := azapiversions.GetAPIVersions(resource)
 				if err != nil {
 					log.Fatalf("failed to update API versions: %s", err)
 				}
 				resource.AvailableAPIVersions = versions
-				ch <- resource
+				ch <- types.UpdateResourceInfo{Filename: filename, Index: index, APIVersions: versions}
 			}
 		}(filename, resources)
 	}
@@ -58,8 +55,20 @@ func main() {
 		close(ch)
 	}()
 
-	fmt.Printf("Available API Versions:\n\n")
-	for resource := range ch {
-		fmt.Println(resource)
+	// Receive the updated resource information and update the map
+	for info := range ch {
+		dirResults[info.Filename][info.Index].AvailableAPIVersions = info.APIVersions
+	}
+
+	for filename, resources := range dirResults {
+		fmt.Printf("%s:\n", filepath.Base(filename))
+		for _, resource := range resources {
+			fmt.Println(resource)
+		}
+	}
+
+	err = bicep.UpdateDirectory(dirResults, false, false)
+	if err != nil {
+		log.Fatalf("failed to update API versions: %s", err)
 	}
 }
