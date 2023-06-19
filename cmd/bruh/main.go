@@ -24,12 +24,6 @@ func main() {
 	// Create a wait group to synchronize goroutines
 	var wg sync.WaitGroup
 
-	type info struct {
-		filename string
-		index    int
-		resource types.ResourceInfo
-	}
-
 	// Create a channel to receive the updated resource information
 	ch := make(chan types.UpdateResourceInfo)
 
