@@ -45,14 +45,45 @@ tasks:
     silent: true
 
   # Test
-  test:internal:parse:
-    desc: Run tests for parse package
+  test:internal:bicep:
+    desc: Run tests for bicep package
     aliases:
-      - "test:parse"
-    dir: ./internal/parse
+      - "test:bicep"
+    dir: ./internal/bicep
     cmds:
       - go test -v
       - go test -cover
+    silent: true
+
+  test:internal:bicep:parse:
+    desc: Run tests for bicep package's parse methods
+    aliases:
+      - "test:update"
+      - "test:bicep:update"
+    dir: ./internal/bicep
+    cmds:
+      - go test -v -run "TestParse"
+    silent: true
+
+  test:internal:bicep:update:
+    desc: Run tests for bicep package's update methods
+    aliases:
+      - "test:parse"
+      - "test:bicep:parse"
+    dir: ./internal/bicep
+    cmds:
+      - go test -v -run "TestUpdate"
+    silent: true
+
+  test:internal:bicep:parse-update:
+    desc: Run tests for bicep package's  parse and update methods combined
+    aliases:
+      - "test:pu"
+      - "test:parse-update"
+      - "test:bicep:parse-update"
+    dir: ./internal/bicep
+    cmds:
+      - go test -v -run "TestParseUpdate"
     silent: true
 
   test:internal:azapiversions:
@@ -71,7 +102,7 @@ tasks:
     aliases:
       - "test:all"
     cmds:
-      - printf "---------- parse ------------------\n\n" && task test:internal:parse && printf "\n\n"
+      - printf "---------- bicep ------------------\n\n" && task test:internal:bicep && printf "\n\n"
       - printf "---------- azapiversions -----------\n\n" && task test:internal:azapiversions && printf "\n\n"
     silent: true
 

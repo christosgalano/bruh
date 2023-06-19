@@ -18,6 +18,10 @@ enableAllRules = true
     Disabled = true
 [rule.cognitive-complexity]
     Disabled = true
+[rule.flag-parameter]
+    Disabled = true
+[rule.empty-lines]
+    Disabled = true
 
 # Rule tuning
 
