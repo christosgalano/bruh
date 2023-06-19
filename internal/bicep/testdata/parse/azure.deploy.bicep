@@ -30,7 +30,7 @@ var suffix = '${workload}-${environment}-${location_abbreviation}'
 
 /// Resources ///
 
-resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
+resource rg 'Microsoft.Resources/resourceGroups@2021-01-01' = {
   name: rg_name
   location: location
   tags: tags
@@ -54,6 +54,18 @@ module compute 'modules/compute.bicep' = {
     webapp_min_tls_version: '1.2'
     webapp_health_check_path: '/health'
     webapp_linux_fx_version: 'DOCKER|mcr.microsoft.com/appsvc/staticsite:latest'
+  }
+  dependsOn: [
+    rg
+  ]
+}
+
+module identity 'modules/identity.bicep' = {
+  scope: resourceGroup(rg_name)
+  name: 'identity-deployment'
+  params: {
+    name: 'identity-${suffix}'
+    location: location
   }
   dependsOn: [
     rg

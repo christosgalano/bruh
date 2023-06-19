@@ -1,7 +1,11 @@
 /*
-Package parse provides functions to parse Bicep files and directories and extract information about the resources defined in them.
+Package bicep provides a comprehensive set of functions to manipulate Bicep files and directories.
+
+It offers methods for parsing directories and files to extract valuable information regarding resource metadata, such as name and API version.
+
+The package also includes functions to update the API versions of existing Bicep files in place or create new ones.
 */
-package parse
+package bicep
 
 import (
 	"fmt"
@@ -15,7 +19,7 @@ import (
 
 const (
 	// pattern is the regex pattern used to match resource IDs in Bicep files
-	pattern = `(?P<namespace>Microsoft\.[a-zA-Z]+)/(?P<resource>[a-zA-Z]+)@(?P<version>[0-9]{4}-[0-9]{2}-[0-9]{2})`
+	pattern = `(?P<namespace>Microsoft\.[a-zA-Z]+)/(?P<resource>[a-zA-Z]+)@(?P<version>[0-9]{4}-[0-9]{2}-[0-9]{2}-preview|[0-9]{4}-[0-9]{2}-[0-9]{2})`
 )
 
 // validateBicepFile validates that a file exists has the .bicep extension.
@@ -37,8 +41,8 @@ func validateBicepFile(path string) error {
 	return nil
 }
 
-// File parses a file and returns a slice of types.ResourceInfo.
-func File(filename string) ([]types.ResourceInfo, error) {
+// ParseFile parses a file and returns a slice of types.ResourceInfo.
+func ParseFile(filename string) ([]types.ResourceInfo, error) {
 	if err := validateBicepFile(filename); err != nil {
 		return nil, err
 	}
@@ -59,8 +63,8 @@ func File(filename string) ([]types.ResourceInfo, error) {
 	for _, match := range matches {
 		results = append(results, types.ResourceInfo{
 			ID:                match[1] + "/" + match[2],
+			Name:              match[2],
 			Namespace:         match[1],
-			Resource:          match[2],
 			CurrentAPIVersion: match[3],
 		})
 	}
@@ -68,8 +72,8 @@ func File(filename string) ([]types.ResourceInfo, error) {
 	return results, nil
 }
 
-// Directory parses a directory and returns a map of filename to slice of types.ResourceInfo.
-func Directory(dir string) (map[string][]types.ResourceInfo, error) {
+// ParseDirectory parses a directory and returns a map of filename to slice of types.ResourceInfo.
+func ParseDirectory(dir string) (map[string][]types.ResourceInfo, error) {
 	results := map[string][]types.ResourceInfo{}
 
 	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
@@ -82,7 +86,7 @@ func Directory(dir string) (map[string][]types.ResourceInfo, error) {
 			return nil
 		}
 
-		fileResults, err := File(path)
+		fileResults, err := ParseFile(path)
 		if err != nil {
 			return err
 		}

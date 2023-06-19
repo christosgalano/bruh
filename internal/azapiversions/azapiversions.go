@@ -55,8 +55,8 @@ func extractAPIVersions(body string, pattern string) ([]string, error) {
 
 // GetAPIVersions returns a sorted list of API versions for a given resource.
 func GetAPIVersions(resource types.ResourceInfo) ([]string, error) {
-	url := "https://learn.microsoft.com/en-us/azure/templates/" + strings.ToLower(resource.Namespace) + "/" + strings.ToLower(resource.Resource)
-	pattern := `href="(\d{4}-\d{2}-\d{2})/` + strings.ToLower(resource.Resource) + `"`
+	url := "https://learn.microsoft.com/en-us/azure/templates/" + strings.ToLower(resource.Namespace) + "/" + strings.ToLower(resource.Name)
+	pattern := `href="(\d{4}-\d{2}-\d{2}-preview|\d{4}-\d{2}-\d{2})/` + strings.ToLower(resource.Name) + `"`
 
 	body, err := fetchResourcePage(url)
 	if err != nil {

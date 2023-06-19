@@ -110,8 +110,8 @@ func TestGetAPIVersions(t *testing.T) {
 			args: args{
 				resource: types.ResourceInfo{
 					ID:        "Microsoft.Web/serverFarms",
+					Name:      "serverFarms",
 					Namespace: "Microsoft.Web",
-					Resource:  "serverFarms",
 				},
 			},
 			subset:  []string{"2022-03-01", "2021-03-01", "2021-02-01", "2021-01-15", "2021-01-01", "2020-12-01", "2020-10-01"},
@@ -122,8 +122,8 @@ func TestGetAPIVersions(t *testing.T) {
 			args: args{
 				resource: types.ResourceInfo{
 					ID:        "Microsoft.Web/invalid",
+					Name:      "invalid",
 					Namespace: "Microsoft.Web",
-					Resource:  "invalid",
 				},
 			},
 			subset:  nil,
