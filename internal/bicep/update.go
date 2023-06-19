@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/christosgalano/bruh/internal/types"
 )
@@ -78,16 +79,39 @@ func UpdateFile(filename string, resources []types.ResourceInfo, inPlace bool, i
 	return nil
 }
 
-// UpdateDirectory receives a map of filenames and their resources and updates the files with the new API versions.
+// UpdateDirectory receives a map of filenames and their resources and updates the files with the new API versions using goroutines.
 // inPlace determines whether the files should be updated in place or new ones should be created with suffix "_updated.bicep".
 // includePreview determines whether preview API versions should be considered.
 func UpdateDirectory(files map[string][]types.ResourceInfo, inPlace bool, includePreview bool) error {
+	// Create a wait group to synchronize goroutines
+	var wg sync.WaitGroup
+
+	results := make(chan error)
+
+	// Launch a goroutine for each file
 	for filename, resources := range files {
-		err := UpdateFile(filename, resources, inPlace, includePreview)
-		if err != nil {
-			return fmt.Errorf("failed to update file: %s", err)
-		}
-		fmt.Println()
+		wg.Add(1)
+		go func(filename string, resources []types.ResourceInfo, inPlace bool, includePreview bool) {
+			defer wg.Done()
+			err := UpdateFile(filename, resources, inPlace, includePreview)
+			if err != nil {
+				results <- fmt.Errorf("failed to update file: %s", err)
+			}
+		}(filename, resources, inPlace, includePreview)
 	}
+
+	// Start a goroutine to close the channel once all goroutines are done
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	// Receive the results from the goroutines
+	for err := range results {
+		if err != nil {
+			return fmt.Errorf("failed to update directory: %s", err)
+		}
+	}
+
 	return nil
 }
