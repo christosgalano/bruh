@@ -41,8 +41,8 @@ func validateBicepFile(path string) error {
 	return nil
 }
 
-// ParseFile parses a file and returns a slice of types.ResourceInfo.
-func ParseFile(filename string) ([]types.ResourceInfo, error) {
+// ParseFile parses a file and returns a pointer to a BicepFile object.
+func ParseFile(filename string) (*types.BicepFile, error) {
 	if err := validateBicepFile(filename); err != nil {
 		return nil, err
 	}
@@ -57,11 +57,11 @@ func ParseFile(filename string) ([]types.ResourceInfo, error) {
 		return nil, err
 	}
 
-	results := []types.ResourceInfo{}
+	results := []types.Resource{}
 
 	matches := regex.FindAllStringSubmatch(string(data), -1)
 	for _, match := range matches {
-		results = append(results, types.ResourceInfo{
+		results = append(results, types.Resource{
 			ID:                match[1] + "/" + match[2],
 			Name:              match[2],
 			Namespace:         match[1],
@@ -69,12 +69,19 @@ func ParseFile(filename string) ([]types.ResourceInfo, error) {
 		})
 	}
 
-	return results, nil
+	bicepFile := types.BicepFile{
+		Name:      filename,
+		Resources: results,
+	}
+
+	return &bicepFile, nil
 }
 
-// ParseDirectory parses a directory and returns a map of filename to slice of types.ResourceInfo.
-func ParseDirectory(dir string) (map[string][]types.ResourceInfo, error) {
-	results := map[string][]types.ResourceInfo{}
+// ParseDirectory parses a directory and returns a pointer to a BicepDirectory object.
+func ParseDirectory(dir string) (*types.BicepDirectory, error) {
+	bicepDir := types.BicepDirectory{
+		Name: dir,
+	}
 
 	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -86,11 +93,11 @@ func ParseDirectory(dir string) (map[string][]types.ResourceInfo, error) {
 			return nil
 		}
 
-		fileResults, err := ParseFile(path)
+		file, err := ParseFile(path)
 		if err != nil {
 			return err
 		}
-		results[path] = fileResults
+		bicepDir.Files = append(bicepDir.Files, *file)
 
 		return nil
 	})
@@ -99,5 +106,5 @@ func ParseDirectory(dir string) (map[string][]types.ResourceInfo, error) {
 		return nil, err
 	}
 
-	return results, nil
+	return &bicepDir, nil
 }

@@ -11,22 +11,22 @@ import (
 func TestParseUpdateFile(t *testing.T) {
 	type args struct {
 		filename       string
-		resources      []types.ResourceInfo
+		resources      []types.Resource
 		inPlace        bool
 		includePreview bool
 	}
 	tests := []struct {
 		name    string
 		args    args
-		initial []types.ResourceInfo
-		final   []types.ResourceInfo
+		initial types.BicepFile
+		final   types.BicepFile
 		wantErr bool
 	}{
 		{
 			name: "azure.deploy.bicep",
 			args: args{
 				filename: "testdata/parse_update/azure.deploy.bicep",
-				resources: []types.ResourceInfo{
+				resources: []types.Resource{
 					{
 						AvailableAPIVersions: []string{
 							"2022-09-01",
@@ -39,20 +39,26 @@ func TestParseUpdateFile(t *testing.T) {
 				inPlace:        false,
 				includePreview: false,
 			},
-			initial: []types.ResourceInfo{
-				{
-					ID:                "Microsoft.Resources/resourceGroups",
-					Name:              "resourceGroups",
-					Namespace:         "Microsoft.Resources",
-					CurrentAPIVersion: "2021-01-01",
+			initial: types.BicepFile{
+				Name: "testdata/parse_update/azure.deploy.bicep",
+				Resources: []types.Resource{
+					{
+						ID:                "Microsoft.Resources/resourceGroups",
+						Name:              "resourceGroups",
+						Namespace:         "Microsoft.Resources",
+						CurrentAPIVersion: "2021-01-01",
+					},
 				},
 			},
-			final: []types.ResourceInfo{
-				{
-					ID:                "Microsoft.Resources/resourceGroups",
-					Name:              "resourceGroups",
-					Namespace:         "Microsoft.Resources",
-					CurrentAPIVersion: "2022-09-01",
+			final: types.BicepFile{
+				Name: "testdata/parse_update/azure.deploy_updated.bicep",
+				Resources: []types.Resource{
+					{
+						ID:                "Microsoft.Resources/resourceGroups",
+						Name:              "resourceGroups",
+						Namespace:         "Microsoft.Resources",
+						CurrentAPIVersion: "2022-09-01",
+					},
 				},
 			},
 			wantErr: false,
@@ -63,40 +69,37 @@ func TestParseUpdateFile(t *testing.T) {
 			// First parse
 			got, err := ParseFile(tt.args.filename)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ParseFile() error = %v, wantErr %v", err, tt.wantErr)
-				return
+				t.Fatalf("ParseFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			if !reflect.DeepEqual(got, tt.initial) {
-				t.Errorf("First parse: ParseFile() = %v, want %v", got, tt.initial)
+			if !reflect.DeepEqual(*got, tt.initial) {
+				t.Fatalf("First parse: ParseFile() = %v, want %v", *got, tt.initial)
 			}
 
 			// Inject available API versions
-			for i := range got {
-				got[i].AvailableAPIVersions = tt.args.resources[i].AvailableAPIVersions
+			for i := range got.Resources {
+				got.Resources[i].AvailableAPIVersions = tt.args.resources[i].AvailableAPIVersions
 			}
 
 			// Update file
-			err = UpdateFile(tt.args.filename, got, tt.args.inPlace, tt.args.includePreview)
+			err = UpdateFile(got, tt.args.inPlace, tt.args.includePreview)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("UpdateFile() error = %v, wantErr %v", err, tt.wantErr)
-				return
+				t.Fatalf("UpdateFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
 			// Second parse
 			updatedFile := strings.Replace(tt.args.filename, ".bicep", "_updated.bicep", 1)
 			got, err = ParseFile(updatedFile)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ParseFile() error = %v, wantErr %v", err, tt.wantErr)
-				return
+				t.Fatalf("ParseFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			if !reflect.DeepEqual(got, tt.final) {
-				t.Errorf("Second parse: ParseFile() = %v, want %v", got, tt.final)
+			if !reflect.DeepEqual(*got, tt.final) {
+				t.Fatalf("Second parse: ParseFile() = %v, want %v", *got, tt.final)
 			}
 
 			// Cleanup
 			err = deleteFile(updatedFile)
 			if err != nil {
-				t.Errorf("deleteFile() error = %v", err)
+				t.Fatalf("deleteFile() error = %v", err)
 			}
 		})
 	}

@@ -1,7 +1,7 @@
 /*
-Package azapiversions provides functions to fetch and extract API versions for Azure resources.
+Package apiversions provides functions to fetch and update API versions for Azure resources in a bicep file or directory.
 */
-package azapiversions
+package apiversions
 
 import (
 	"fmt"
@@ -53,20 +53,44 @@ func extractAPIVersions(body string, pattern string) ([]string, error) {
 	return versions, nil
 }
 
-// GetAPIVersions returns a sorted list of API versions for a given resource.
-func GetAPIVersions(resource types.ResourceInfo) ([]string, error) {
+// UpdateResource updates the available API versions for a given resource.
+func UpdateResource(resource *types.Resource) error {
 	url := "https://learn.microsoft.com/en-us/azure/templates/" + strings.ToLower(resource.Namespace) + "/" + strings.ToLower(resource.Name)
 	pattern := `href="(\d{4}-\d{2}-\d{2}-preview|\d{4}-\d{2}-\d{2})/` + strings.ToLower(resource.Name) + `"`
 
 	body, err := fetchResourcePage(url)
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch resource page: %w", err)
+		return fmt.Errorf("failed to fetch resource page: %w", err)
 	}
 
 	versions, err := extractAPIVersions(body, pattern)
 	if err != nil {
-		return nil, fmt.Errorf("failed to extract API versions: %w", err)
+		return fmt.Errorf("failed to extract API versions: %w", err)
 	}
 
-	return versions, nil
+	resource.AvailableAPIVersions = versions
+
+	return nil
+}
+
+// UpdateBicepFile updates the available API versions for all resources in a given bicep file.
+func UpdateBicepFile(bicepFile *types.BicepFile) error {
+	for i := range bicepFile.Resources {
+		err := UpdateResource(&bicepFile.Resources[i])
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// UpdateBicepDirectory updates the available API versions for all resources in all bicep files in a given bicep directory.
+func UpdateBicepDirectory(bicepDirectory *types.BicepDirectory) error {
+	for i := range bicepDirectory.Files {
+		err := UpdateBicepFile(&bicepDirectory.Files[i])
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
