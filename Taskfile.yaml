@@ -52,7 +52,6 @@ tasks:
     dir: ./internal/bicep
     cmds:
       - go test -v
-      - go test -cover
     silent: true
 
   test:internal:bicep:parse:
@@ -86,15 +85,25 @@ tasks:
       - go test -v -run "TestParseUpdate"
     silent: true
 
-  test:internal:azapiversions:
-    desc: Run tests for azapiversions package
+  test:internal:apiversions:
+    desc: Run tests for apiversions package
     aliases:
-      - "test:azapiversions"
+      - "test:apiversions"
       - "test:azapi"
-    dir: ./internal/azapiversions
+    dir: ./internal/apiversions
     cmds:
       - go test -v
-      - go test -cover
+    silent: true
+
+  test:internal:coverage:
+    desc: Generate coverage report for all packages
+    aliases:
+      - "test:coverage"
+      - "test:cov"
+    dir: ./internal
+    cmds:
+      - go test -cover ./bicep
+      - go test -cover ./apiversions
     silent: true
 
   test:internal:all:
@@ -102,8 +111,8 @@ tasks:
     aliases:
       - "test:all"
     cmds:
-      - printf "---------- bicep ------------------\n\n" && task test:internal:bicep && printf "\n\n"
-      - printf "---------- azapiversions -----------\n\n" && task test:internal:azapiversions && printf "\n\n"
+      - printf "---------- bicep ---------------------------------\n\n" && task test:internal:bicep && printf "\n\n"
+      - printf "---------- apiversions ---------------------------\n\n" && task test:internal:apiversions && printf "\n\n"
     silent: true
 
   # Build
@@ -133,11 +142,12 @@ tasks:
     aliases:
       - "all"
     cmds:
-      - printf "\n---------- LINT -----------\n\n" && task lint:all && printf "\n\n"
-      - printf "---------- TEST -----------\n\n" && task test:internal:all && printf "\n\n"
-      - printf "---------- BUILD ----------\n\n" && task build:bruh && printf "\n\n"
-      - printf "---------- RUN ------------\n\n" && task run:bruh && printf "\n\n"
-      - printf "---------- CLEAN ----------\n\n" && task clean && printf "\n\n"
+      - printf "---------- LINT ----------------------------------\n\n" && task lint:all
+      - printf "---------- TEST ----------------------------------\n\n" && task test:internal:all
+      - printf "---------- COVERAGE ------------------------------\n\n" && task test:coverage && printf "\n"
+      - printf "---------- BUILD ---------------------------------\n\n" && task build:bruh
+      - printf "---------- RUN -----------------------------------\n\n" && task run:bruh
+      - printf "---------- CLEAN ---------------------------------\n\n" && task clean
     silent: true
 
   # Clean

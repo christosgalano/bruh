@@ -22,6 +22,8 @@ enableAllRules = true
     Disabled = true
 [rule.empty-lines]
     Disabled = true
+[rule.add-constant]
+    Disabled = true
 
 # Rule tuning
 
@@ -38,10 +40,6 @@ enableAllRules = true
 ## Length
 [rule.line-length-limit]
     Arguments = [150]
-
-## Constants
-[rule.add-constant]
-    Arguments = [ { maxLitCount = "4", allowInts = "0,1,2" } ]
 
 ## Error handling
 [rule.unhandled-error]
