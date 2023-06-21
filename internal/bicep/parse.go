@@ -8,6 +8,7 @@ The package also includes functions to update the API versions of existing Bicep
 package bicep
 
 import (
+	"errors"
 	"fmt"
 	"io/fs"
 	"os"
@@ -28,6 +29,9 @@ const (
 func validateBicepFile(path string) error {
 	f, err := os.Stat(path)
 	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("no such file or directory: %s", path)
+		}
 		return err
 	}
 
