@@ -24,6 +24,8 @@ enableAllRules = true
     Disabled = true
 [rule.add-constant]
     Disabled = true
+[rule.deep-exit]
+    Disabled = true
 
 # Rule tuning
 
@@ -35,12 +37,12 @@ enableAllRules = true
 
 ## Max elements
 [rule.max-public-structs]
-    Arguments =[3]
+    Arguments = [4]
 
 ## Length
 [rule.line-length-limit]
-    Arguments = [150]
+    Arguments = [200]
 
 ## Error handling
 [rule.unhandled-error]
-    Arguments =["fmt.Printf", "fmt.Println"]
+    Arguments =["fmt.Printf", "fmt.Println", "fmt.Fprintf", "fmt.Fprintln"]

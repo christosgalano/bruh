@@ -51,7 +51,7 @@ tasks:
       - "test:bicep"
     dir: ./internal/bicep
     cmds:
-      - go test -v
+      - gotestsum -f testname
     silent: true
 
   test:internal:bicep:parse:
@@ -61,7 +61,7 @@ tasks:
       - "test:bicep:update"
     dir: ./internal/bicep
     cmds:
-      - go test -v -run "TestParse"
+      - gotestsum -f testname -- -run "TestParse"
     silent: true
 
   test:internal:bicep:update:
@@ -71,7 +71,7 @@ tasks:
       - "test:bicep:parse"
     dir: ./internal/bicep
     cmds:
-      - go test -v -run "TestUpdate"
+      - gotestsum -f testname -- -run "TestUpdate"
     silent: true
 
   test:internal:bicep:parse-update:
@@ -82,7 +82,7 @@ tasks:
       - "test:bicep:parse-update"
     dir: ./internal/bicep
     cmds:
-      - go test -v -run "TestParseUpdate"
+      - gotestsum -f testname -- -run "TestParseUpdate"
     silent: true
 
   test:internal:apiversions:
@@ -92,7 +92,7 @@ tasks:
       - "test:azapi"
     dir: ./internal/apiversions
     cmds:
-      - go test -v
+      - gotestsum -f testname
     silent: true
 
   test:internal:coverage:
@@ -115,6 +115,16 @@ tasks:
       - printf "---------- apiversions ---------------------------\n\n" && task test:internal:apiversions && printf "\n\n"
     silent: true
 
+  test:internal:minimal:
+    desc: Run tests for all packages with minimal output
+    aliases:
+      - "test:minimal"
+      - "test:min"
+    dir: ./internal
+    cmds:
+      - gotestsum -f pkgname
+    silent: true
+
   # Build
   build:bruh:
     desc: Build bruh
@@ -123,17 +133,6 @@ tasks:
     dir: ./cmd/bruh
     cmds:
       - go build -o bruh ./main.go
-    silent: true
-
-  # Run
-  run:bruh:
-    desc: Run bruh
-    aliases:
-      - "run"
-    deps:
-      - build:bruh
-    cmds:
-      - ./cmd/bruh/bruh
     silent: true
 
   # All
@@ -146,8 +145,6 @@ tasks:
       - printf "---------- TEST ----------------------------------\n\n" && task test:internal:all
       - printf "---------- COVERAGE ------------------------------\n\n" && task test:coverage && printf "\n"
       - printf "---------- BUILD ---------------------------------\n\n" && task build:bruh
-      - printf "---------- RUN -----------------------------------\n\n" && task run:bruh
-      - printf "---------- CLEAN ---------------------------------\n\n" && task clean
     silent: true
 
   # Clean
