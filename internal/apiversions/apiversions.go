@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"sync"
 
 	"github.com/christosgalano/bruh/internal/types"
 )
@@ -60,12 +61,12 @@ func UpdateResource(resource *types.Resource) error {
 
 	body, err := fetchResourcePage(url)
 	if err != nil {
-		return fmt.Errorf("failed to fetch resource page: %w", err)
+		return err
 	}
 
 	versions, err := extractAPIVersions(body, pattern)
 	if err != nil {
-		return fmt.Errorf("failed to extract API versions: %w", err)
+		return err
 	}
 
 	resource.AvailableAPIVersions = versions
@@ -86,11 +87,35 @@ func UpdateBicepFile(bicepFile *types.BicepFile) error {
 
 // UpdateBicepDirectory updates the available API versions for all resources in all bicep files in a given bicep directory.
 func UpdateBicepDirectory(bicepDirectory *types.BicepDirectory) error {
+	// Create a wait group to wait for all goroutines to finish
+	var wg sync.WaitGroup
+
+	results := make(chan error)
+
+	// Launch a goroutine for each file
 	for i := range bicepDirectory.Files {
-		err := UpdateBicepFile(&bicepDirectory.Files[i])
+		wg.Add(1)
+		go func(file *types.BicepFile) {
+			defer wg.Done()
+			err := UpdateBicepFile(file)
+			if err != nil {
+				results <- err
+			}
+		}(&bicepDirectory.Files[i])
+	}
+
+	// Start a goroutine to wait for all goroutines to finish
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	// Receive the results from the goroutines
+	for err := range results {
 		if err != nil {
 			return err
 		}
 	}
+
 	return nil
 }

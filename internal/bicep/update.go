@@ -23,12 +23,12 @@ import (
 func UpdateFile(bicepFile *types.BicepFile, inPlace bool, includePreview bool) error {
 	file, err := os.Stat(bicepFile.Name)
 	if err != nil {
-		return fmt.Errorf("failed to get file info: %s", err)
+		return fmt.Errorf("failed to get file info %s", err)
 	}
 
 	data, err := os.ReadFile(bicepFile.Name)
 	if err != nil {
-		return fmt.Errorf("failed to read file: %s", err)
+		return fmt.Errorf("failed to read file %q", err)
 	}
 	content := string(data)
 
@@ -68,7 +68,7 @@ func UpdateFile(bicepFile *types.BicepFile, inPlace bool, includePreview bool) e
 
 	err = os.WriteFile(modifiedFile, []byte(content), file.Mode().Perm())
 	if err != nil {
-		return fmt.Errorf("failed to update file: %s", err)
+		return fmt.Errorf("failed to update file %s", err)
 	}
 
 	return nil
@@ -78,7 +78,7 @@ func UpdateFile(bicepFile *types.BicepFile, inPlace bool, includePreview bool) e
 // inPlace determines whether the files should be updated in place or new ones should be created with suffix "_updated.bicep".
 // includePreview determines whether preview API versions should be considered.
 func UpdateDirectory(bicepDirectory *types.BicepDirectory, inPlace bool, includePreview bool) error {
-	// Create a wait group to synchronize goroutines
+	// Create a wait group to wait for all goroutines to finish
 	var wg sync.WaitGroup
 
 	results := make(chan error)

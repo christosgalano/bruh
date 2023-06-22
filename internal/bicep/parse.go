@@ -30,17 +30,17 @@ func validateBicepFile(path string) error {
 	f, err := os.Stat(path)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			return fmt.Errorf("no such file or directory: %s", path)
+			return fmt.Errorf("no such file or directory %q", path)
 		}
 		return err
 	}
 
 	if f.IsDir() {
-		return fmt.Errorf("given path is a directory: %s", path)
+		return fmt.Errorf("given path is a directory %q", path)
 	}
 
 	if ext := filepath.Ext(path); ext != ".bicep" {
-		return fmt.Errorf("invalid file extension: %s", ext)
+		return fmt.Errorf("invalid file extension %q", ext)
 	}
 	return nil
 }

@@ -30,6 +30,7 @@ func Execute() {
 // addSubCommands adds subcommands to the root command
 func addSubCommands() {
 	rootCmd.AddCommand(scanCmd)
+	rootCmd.AddCommand(updateCmd)
 }
 
 // init initializes the root command
