@@ -67,7 +67,7 @@ Update a directory and create new files with the "_updated.bicep" extension, inc
 
 ```text
 > bruh update --path ./bicep --include-preview
-/Users/galano/Developer/Christos/Development/Go/bruh/bicep:
+{absolute-path}/bicep:
 
 modules/compute_updated.bicep:
   + Updated Microsoft.Web/serverfarms from version 2022-03-01 to 2022-03-01
