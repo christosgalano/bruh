@@ -84,7 +84,8 @@ func init() {
 	updateCmd.Flags().BoolVarP(&silent, "silent", "s", false, "silent mode (no output)")
 
 	// Examples
-	updateCmd.Example = `Update a Bicep file in place:
+	updateCmd.Example = `
+Update a bicep file in place:
   bruh update --path ./main.bicep --in-place
 
 Update a directory including preview API versions:

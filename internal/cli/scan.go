@@ -70,7 +70,8 @@ func init() {
 	scanCmd.Flags().BoolVarP(&outdated, "outdated", "u", false, "show only outdated resources")
 
 	// Examples
-	scanCmd.Example = `Scan a Bicep file:
+	scanCmd.Example = `
+Scan a bicep file:
   bruh scan --path ./main.bicep
 
 Scan a directory:
