@@ -42,7 +42,7 @@ Print output in table format:
 
 	bruh scan --path ./bicep/modules --output table
 
-For full usage details, run "bruh scan --help" or "bruh help scan".
+For full usage details, run `bruh scan --help` or `bruh help scan`.
 
 # Update
 
@@ -67,7 +67,7 @@ Use silent mode:
 
 	bruh update --path ./main.bicep --silent
 
-For full usage details, run "bruh update --help" or "bruh help update"
+For full usage details, run `bruh update --help` or `bruh help update`.
 
 Note: all the API versions are fetched from the official Microsoft learn website (https://learn.microsoft.com/en-us/azure/templates/).
 */
