@@ -3,7 +3,6 @@ package bicep
 import (
 	"fmt"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/christosgalano/bruh/internal/types"
@@ -165,12 +164,9 @@ func TestUpdateDirectory(t *testing.T) {
 				t.Fatalf("UpdateDirectory() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
-			newFiles := []string{}
 			for _, file := range tt.args.bicepDirectory.Files {
-				newFiles = append(newFiles, strings.Replace(file.Name, ".bicep", "_updated.bicep", 1))
-			}
+				filename := file.Name
 
-			for _, filename := range newFiles {
 				exists, err := fileExists(filename)
 				if err != nil {
 					t.Errorf("fileExists() error = %v", err)
