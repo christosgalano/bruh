@@ -23,8 +23,8 @@ It can be used to detect drift between the API versions used in the bicep files 
 
 Scan a bicep file and print the results using the normal format:
 
-```markdown
-bruh scan --path ./bicep/modules/compute.bicep
+```text
+> bruh scan --path ./bicep/modules/compute.bicep
 
 ./bicep/modules/compute.bicep:
   - Microsoft.Web/serverfarms is using 2021-01-15 while the latest version is 2022-03-01
@@ -33,8 +33,8 @@ bruh scan --path ./bicep/modules/compute.bicep
 
 Scan a directory and print only outdated resources using the table format:
 
-```markdown
-bruh scan --path ./bicep --output table --outdated
+```text
+> bruh scan --path ./bicep --output table --outdated
 {absolute-path}/bicep:
 
 +------------------------+--------------------------------------------------+---------------------+--------------------+
@@ -57,8 +57,8 @@ and updates the file(s) in place or creates new ones with the "_updated.bicep" e
 
 Update a bicep file in place:
 
-```bash
-bruh update --path ./bicep/modules/compute.bicep --in-place
+```text
+> bruh update --path ./bicep/modules/compute.bicep --in-place
 ./bicep/modules/compute.bicep:
   + Updated Microsoft.Web/serverfarms from version 2022-03-01 to 2022-03-01
   + Updated Microsoft.Web/sites from version 2022-03-01 to 2022-03-01
@@ -66,8 +66,8 @@ bruh update --path ./bicep/modules/compute.bicep --in-place
 
 Update a directory and create new files with the "_updated.bicep" extension, including preview API versions:
 
-```bash
-bruh update --path ./bicep --include-preview
+```text
+> bruh update --path ./bicep --include-preview
 /Users/galano/Developer/Christos/Development/Go/bruh/bicep:
 
 modules/compute_updated.bicep:
