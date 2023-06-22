@@ -1,5 +1,12 @@
 /*
-Package cli TODO: add description
+Package cli provides a command-line interface (CLI) for the bruh tool, utilizing cobra-cli. It offers two main commands: scan and update.
+
+The scan command parses the given bicep file or directory, fetches the latest API versions for each Azure resource referenced in the file(s),
+and prints the results to stdout. For full usage details, run "bruh scan --help" or "bruh help scan".
+
+The update command parses the given bicep file or directory, fetches the latest API versions for each Azure resource referenced in the file(s),
+and updates the file(s) in place or creates new ones with the "_updated.bicep" extension.
+For full usage details, run "bruh update --help" or "bruh help update".
 */
 package cli
 

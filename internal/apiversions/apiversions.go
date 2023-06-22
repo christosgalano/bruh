@@ -1,5 +1,6 @@
 /*
 Package apiversions provides functions to fetch and update API versions for Azure resources in a bicep file or directory.
+The API versions are fetched from the official Microsoft learn website (https://learn.microsoft.com/en-us/azure/templates/).
 */
 package apiversions
 

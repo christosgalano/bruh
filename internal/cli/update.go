@@ -1,6 +1,3 @@
-/*
-Package cli TODO: add description
-*/
 package cli
 
 import (

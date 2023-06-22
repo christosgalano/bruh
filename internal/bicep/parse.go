@@ -2,8 +2,10 @@
 Package bicep provides a comprehensive set of functions to manipulate Bicep files and directories.
 
 It offers methods for parsing directories and files to extract valuable information regarding resource metadata, such as name and API version.
+The two main functions are ParseDirectory and ParseFile, which receive a directory or file path respectively and return a pointer to a BicepDirectory or BicepFile object.
 
-The package also includes functions to update the API versions of existing Bicep files in place or create new ones.
+The package also includes functions to update the API versions of existing Bicep files in place or create new ones. This can be done by calling
+UpdateDirectory or UpdateFile, which receive a pointer to a BicepDirectory or BicepFile object respectively.
 */
 package bicep
 

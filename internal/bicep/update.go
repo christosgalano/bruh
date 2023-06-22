@@ -1,10 +1,3 @@
-/*
-Package bicep provides a comprehensive set of functions to manipulate Bicep files and directories.
-
-It offers methods for parsing directories and files to extract valuable information regarding resource metadata, such as name and API version.
-
-The package also includes functions to update the API versions of existing Bicep files in place or create new ones.
-*/
 package bicep
 
 import (
