@@ -19,10 +19,14 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "bruh",
-	Short: "bruh is a tool for updating the API version of Azure resources in Bicep files",
-	Long:  ``,
+	Short: "bruh is a command-line tool for updating the API version of Azure resources in Bicep files",
+	Long: `bruh (Bicep Resource Update Helper) is a command-line tool for updating the API version of Azure resources in Bicep files.
+
+It can be used to scan a Bicep file or directory and print out information regarding the API versions of used Azure resources.
+bruh can also be used to update all the resources to the latest API version available either in place or by creating new files with the "_updated.bicep" extension.
+All the API versions are fetched from the official Microsoft learn website (https://learn.microsoft.com/en-us/azure/templates/).`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+		cmd.Usage()
 	},
 }
 

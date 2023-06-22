@@ -22,8 +22,7 @@ var (
 var updateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Update a bicep file or a directory containing bicep files",
-	Long: `Update a bicep file or a directory containing bicep files
-so that each Azure resource uses the latest API version available.
+	Long: `Update a bicep file or a directory containing bicep files so that each Azure resource uses the latest API version available.
 It is possible to update the files in place or create new files with "_updated.bicep" extension.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
@@ -83,6 +82,16 @@ func init() {
 
 	// silent - optional
 	updateCmd.Flags().BoolVarP(&silent, "silent", "s", false, "silent mode (no output)")
+
+	// Examples
+	updateCmd.Example = `Update a Bicep file in place:
+  bruh update --path ./main.bicep --in-place
+
+Update a directory including preview API versions:
+  bruh update --path ./bicep/modules --include-preview
+
+Use silent mode:
+  bruh update --path ./main.bicep --silent`
 }
 
 // updateFile parses the given file, fetches the latest API versions for each Azure resource and updates the file.

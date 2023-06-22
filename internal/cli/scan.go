@@ -21,8 +21,8 @@ var (
 var scanCmd = &cobra.Command{
 	Use:   "scan",
 	Short: "Scan a bicep file or a directory containing bicep files",
-	Long: `Scan a bicep file or a directory containing bicep files
-and print out information regarding the API versions of Azure resources`,
+	Long: `Scan a bicep file or a directory containing bicep files and
+print out information regarding the API versions of Azure resources`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Invalid output format
 		if output != "normal" && output != "table" {
@@ -68,6 +68,19 @@ func init() {
 
 	// outdated - optional
 	scanCmd.Flags().BoolVarP(&outdated, "outdated", "u", false, "show only outdated resources")
+
+	// Examples
+	scanCmd.Example = `Scan a Bicep file:
+  bruh scan --path ./main.bicep
+
+Scan a directory:
+  bruh scan --path ./bicep/modules
+
+Show only outdated resources:
+  bruh scan --path ./main.bicep --outdated
+
+Print output in table format:
+  bruh scan --path ./bicep/modules --output table`
 }
 
 // scanFile parses a file, fetches the latest API versions of Azure resources and then prints out information regarding the status of those resources.
