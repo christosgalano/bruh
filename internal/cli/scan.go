@@ -22,7 +22,7 @@ var scanCmd = &cobra.Command{
 	Use:   "scan",
 	Short: "Scan a bicep file or a directory containing bicep files",
 	Long: `Scan a bicep file or a directory containing bicep files and
-print out information regarding the API versions of Azure resources`,
+print out information regarding the API versions of Azure resources.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Invalid output format
 		if output != "normal" && output != "table" {
