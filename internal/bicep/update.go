@@ -49,13 +49,7 @@ func UpdateFile(bicepFile *types.BicepFile, inPlace bool, includePreview bool) e
 		if bicepFile.Resources[i].CurrentAPIVersion != latestAPIVersion {
 			re := regexp.MustCompile(bicepFile.Resources[i].ID + "@" + bicepFile.Resources[i].CurrentAPIVersion)
 			content = re.ReplaceAllString(content, bicepFile.Resources[i].ID+"@"+latestAPIVersion)
-
-			// TODO: find better way to print update messages
-
-			// Update object only if we want to update the file in place
-			if inPlace {
-				bicepFile.Resources[i].CurrentAPIVersion = latestAPIVersion
-			}
+			bicepFile.Resources[i].CurrentAPIVersion = latestAPIVersion
 		}
 
 	}
@@ -64,6 +58,9 @@ func UpdateFile(bicepFile *types.BicepFile, inPlace bool, includePreview bool) e
 	modifiedFile := bicepFile.Name
 	if !inPlace {
 		modifiedFile = strings.Replace(modifiedFile, ".bicep", "_updated.bicep", 1)
+
+		// Entry now points to the new file
+		bicepFile.Name = modifiedFile
 	}
 
 	err = os.WriteFile(modifiedFile, []byte(content), file.Mode().Perm())
