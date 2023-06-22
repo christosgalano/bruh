@@ -11,7 +11,7 @@ import (
 
 // printFileNormal prints the file's information in normal format.
 func printFileNormal(bicepFile *types.BicepFile, filename string, outdated bool, mode types.Mode) {
-	fmt.Printf("\n%s:\n", filename)
+	fmt.Printf("%s:\n", filename)
 	for _, resource := range bicepFile.Resources {
 		latestAPIVersion := resource.AvailableAPIVersions[0]
 		if mode == types.ModeScan {
@@ -34,7 +34,7 @@ func printFileTable(bicepFile *types.BicepFile, outdated bool) {
 	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
 	table.SetColumnAlignment([]int{tablewriter.ALIGN_LEFT, tablewriter.ALIGN_CENTER, tablewriter.ALIGN_CENTER})
 
-	fmt.Printf("\n%s:\n", bicepFile.Name)
+	fmt.Printf("%s:\n", bicepFile.Name)
 	for _, resource := range bicepFile.Resources {
 		if outdated && (resource.CurrentAPIVersion == resource.AvailableAPIVersions[0]) {
 			continue
@@ -51,7 +51,7 @@ func printDirectoryNormal(bicepDirectory *types.BicepDirectory, outdated bool, m
 	if err != nil {
 		absolutePath = bicepDirectory.Name
 	}
-	fmt.Printf("\n%s:\n", absolutePath)
+	fmt.Printf("%s:\n\n", absolutePath)
 	for _, file := range bicepDirectory.Files {
 		filename, err := filepath.Rel(bicepDirectory.Name, file.Name)
 		if err != nil {
@@ -74,7 +74,7 @@ func printDirectoryTable(bicepDirectory *types.BicepDirectory, outdated bool) {
 	if err != nil {
 		absolutePath = bicepDirectory.Name
 	}
-	fmt.Printf("\n%s:\n", absolutePath)
+	fmt.Printf("%s:\n\n", absolutePath)
 	for _, file := range bicepDirectory.Files {
 		for _, resource := range file.Resources {
 			filename, err := filepath.Rel(bicepDirectory.Name, file.Name)
