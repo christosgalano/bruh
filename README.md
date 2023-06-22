@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-go install github.com/christosgalano/bruh/cmd/bruh
+go install github.com/christosgalano/bruh@latest
 ```
 
 ## Overview

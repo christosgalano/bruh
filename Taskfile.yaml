@@ -23,7 +23,7 @@ tasks:
       - "vet"
     cmds:
       - go vet ./internal/*
-      - go vet ./cmd/*
+      - go vet ./main.go
     silent: true
 
   lint:revive:
@@ -33,7 +33,7 @@ tasks:
       - "revive"
     cmds:
       - revive -config revive.toml -formatter friendly ./internal/*
-      - revive -config revive.toml -formatter friendly ./cmd/*
+      - revive -config revive.toml -formatter friendly ./main.go
     silent: true
 
   lint:all:
@@ -130,7 +130,6 @@ tasks:
     desc: Build bruh
     aliases:
       - "build"
-    dir: ./cmd/bruh
     cmds:
       - go build -o bruh ./main.go
     silent: true
@@ -153,5 +152,5 @@ tasks:
     aliases:
       - "clean"
     cmds:
-      - rm ./cmd/bruh/bruh
+      - rm ./bruh
     silent: true

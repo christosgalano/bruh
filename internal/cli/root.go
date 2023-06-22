@@ -11,8 +11,6 @@ For full usage details, run "bruh update --help" or "bruh help update".
 package cli
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 )
 
@@ -31,11 +29,8 @@ All the API versions are fetched from the official Microsoft learn website (http
 }
 
 // Execute executes the root command
-func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
-	}
+func Execute() error {
+	return rootCmd.Execute()
 }
 
 // addSubCommands adds subcommands to the root command

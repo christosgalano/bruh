@@ -74,9 +74,13 @@ Note: all the API versions are fetched from the official Microsoft learn website
 package main
 
 import (
+	"os"
+
 	"github.com/christosgalano/bruh/internal/cli"
 )
 
 func main() {
-	cli.Execute()
+	if err := cli.Execute(); err != nil {
+		os.Exit(1)
+	}
 }
