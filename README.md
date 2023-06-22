@@ -10,25 +10,6 @@ go install github.com/christosgalano/bruh/cmd/bruh
 
 bruh (Bicep Resource Update Helper) is a command-line tool for scanning and updating the API version of Azure resources in Bicep files.
 
-```bash
-./bruh
-Usage:
-  bruh [flags]
-  bruh [command]
-
-Available Commands:
-  completion  Generate the autocompletion script for the specified shell
-  help        Help about any command
-  scan        Scan a bicep file or a directory containing bicep files
-  update      Update a bicep file or a directory containing bicep files
-
-Flags:
-  -h, --help      help for bruh
-  -v, --version   version for bruh
-
-Use "bruh [command] --help" for more information about a command.
-```
-
 It offers two main commands: [**scan**](#scan) and [**update**](#update).
 
 ## Scan
@@ -36,33 +17,35 @@ It offers two main commands: [**scan**](#scan) and [**update**](#update).
 The scan command parses the given bicep file or directory, fetches the latest API versions for each Azure resource referenced in the file(s),
 and prints the results to stdout.
 
-```bash
-./bruh help scan
-Scan a bicep file or a directory containing bicep files and
-print out information regarding the API versions of Azure resources
+It can be used to detect drift between the API versions used in the bicep files and the latest available ones.
 
-Usage:
-  bruh scan [flags]
+### Example usage
 
-Examples:
+Scan a bicep file and print the results using the normal format:
 
-Scan a bicep file:
-  bruh scan --path ./main.bicep
+```markdown
+bruh scan --path ./bicep/modules/compute.bicep
 
-Scan a directory:
-  bruh scan --path ./bicep/modules
+./bicep/modules/compute.bicep:
+  - Microsoft.Web/serverfarms is using 2021-01-15 while the latest version is 2022-03-01
+  - Microsoft.Web/sites is using 2019-08-01 while the latest version is 2022-03-01
+```
 
-Show only outdated resources:
-  bruh scan --path ./main.bicep --outdated
+Scan a directory and print only outdated resources using the table format:
 
-Print output in table format:
-  bruh scan --path ./bicep/modules --output table
+```markdown
+bruh scan --path ./bicep --output table --outdated
+{absolute-path}/bicep:
 
-Flags:
-  -h, --help            help for scan
-  -u, --outdated        show only outdated resources
-  -o, --output string   output format (normal, table) (default "normal")
-  -p, --path string     path to bicep file or directory containing bicep files
++------------------------+--------------------------------------------------+---------------------+--------------------+
+|          FILE          |                     RESOURCE                     | CURRENT API VERSION | LATEST API VERSION |
++------------------------+--------------------------------------------------+---------------------+--------------------+
+| modules/compute.bicep  | Microsoft.Web/serverfarms                        |     2022-03-01      |     2022-03-01     |
++                        +--------------------------------------------------+---------------------+--------------------+
+|                        | Microsoft.Web/sites                              |     2022-03-01      |     2022-03-01     |
++------------------------+--------------------------------------------------+---------------------+--------------------+
+| modules/identity.bicep | Microsoft.ManagedIdentity/userAssignedIdentities | 2022-01-31-preview  |     2023-01-31     |
++------------------------+--------------------------------------------------+---------------------+--------------------+
 ```
 
 ## Update
@@ -70,30 +53,29 @@ Flags:
 The update command parses the given bicep file or directory, fetches the latest API versions for each Azure resource referenced in the file(s),
 and updates the file(s) in place or creates new ones with the "_updated.bicep" extension.
 
-```bash
-Update a bicep file or a directory containing bicep files so that each Azure resource uses the latest API version available.
-It is possible to update the files in place or create new files with "_updated.bicep" extension.
-
-Usage:
-  bruh update [flags]
-
-Examples:
+### Example usage
 
 Update a bicep file in place:
-  bruh update --path ./main.bicep --in-place
 
-Update a directory including preview API versions:
-  bruh update --path ./bicep/modules --include-preview
+```bash
+bruh update --path ./bicep/modules/compute.bicep --in-place
+./bicep/modules/compute.bicep:
+  + Updated Microsoft.Web/serverfarms from version 2022-03-01 to 2022-03-01
+  + Updated Microsoft.Web/sites from version 2022-03-01 to 2022-03-01
+```
 
-Use silent mode:
-  bruh update --path ./main.bicep --silent
+Update a directory and create new files with the "_updated.bicep" extension, including preview API versions:
 
-Flags:
-  -h, --help              help for update
-  -i, --in-place          update the bicep files in place (if not set: create new files with "_updated.bicep" extension)
-  -r, --include-preview   include preview API versions (if not set: only non-preview versions will be considered)
-  -p, --path string       path to bicep file or directory containing bicep files
-  -s, --silent            silent mode (no output)
+```bash
+bruh update --path ./bicep --include-preview
+/Users/galano/Developer/Christos/Development/Go/bruh/bicep:
+
+modules/compute_updated.bicep:
+  + Updated Microsoft.Web/serverfarms from version 2022-03-01 to 2022-03-01
+  + Updated Microsoft.Web/sites from version 2022-03-01 to 2022-03-01
+
+modules/identity_updated.bicep:
+  + Updated Microsoft.ManagedIdentity/userAssignedIdentities from version 2023-01-31 to 2023-01-31
 ```
 
 **NOTE**: all the API versions are fetched from the official [Microsoft Learn website](https://learn.microsoft.com/en-us/azure/templates/).
