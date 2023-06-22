@@ -25,7 +25,6 @@ Scan a bicep file and print the results using the normal format:
 
 ```text
 > bruh scan --path ./bicep/modules/compute.bicep
-
 ./bicep/modules/compute.bicep:
   - Microsoft.Web/serverfarms is using 2021-01-15 while the latest version is 2022-03-01
   - Microsoft.Web/sites is using 2019-08-01 while the latest version is 2022-03-01
