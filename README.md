@@ -8,7 +8,7 @@ go install github.com/christosgalano/bruh/cmd/bruh
 
 ## Overview
 
-bruh (Bicep Resource Update Helper) is a command-line tool for scanning and updating the API version of Azure resources in Bicep files.
+**bruh (Bicep Resource Update Helper)** is a command-line tool for scanning and updating the API version of Azure resources in Bicep files.
 
 It offers two main commands: [**scan**](#scan) and [**update**](#update).
 
