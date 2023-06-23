@@ -9,10 +9,28 @@ tasks:
       - task -l
     silent: true
 
-  #### Install ####
+  #### Utility ####
 
-  install:tools:
+  setup:
+    desc: Run all setup tasks
+    cmds:
+      - task setup:mod
+      - task setup:go-tools
+    silent: true
+
+  setup:mod:
+    desc: Download and tidy Go modules
+    aliases:
+      - "mod"
+    cmds:
+      - go mod download
+      - go mod tidy
+    silent: true
+
+  setup:go-tools:
     desc: Install necessary Go tools
+    aliases:
+      - "tools"
     cmds:
       - go install github.com/mgechev/revive@latest # revive for linting
       - go install gotest.tools/gotestsum@latest # gotestsum for testing
@@ -21,6 +39,14 @@ tasks:
     silent: true
 
   #### Lint ####
+
+  lint:
+    desc: Run all lint tasks
+    cmds:
+      - task lint:fmt
+      - task lint:vet
+      - task lint:revive
+    silent: true
 
   lint:fmt:
     desc: Format code
@@ -41,7 +67,7 @@ tasks:
     silent: true
 
   lint:revive:
-    desc: Lint code
+    desc: Lint code with revive
     aliases:
       - "rv"
       - "revive"
@@ -50,96 +76,40 @@ tasks:
       - revive -config revive.toml -formatter friendly ./cmd/*
     silent: true
 
-  lint:all:
-    desc: Run all lint tasks
-    cmds:
-      - task lint:fmt
-      - task lint:vet
-      - task lint:revive
-    silent: true
-
   #### Test ####
 
-  test:bicep:
-    desc: Run tests for bicep package
-    aliases:
-      - "test:bicep"
-    dir: ./internal/bicep
-    cmds:
-      - gotestsum -f testname
-    silent: true
-
-  test:bicep:parse:
-    desc: Run tests for bicep package's parse methods
-    aliases:
-      - "test:update"
-      - "test:bicep:update"
-    dir: ./internal/bicep
-    cmds:
-      - gotestsum -f testname -- -run "TestParse"
-    silent: true
-
-  test:bicep:update:
-    desc: Run tests for bicep package's update methods
-    aliases:
-      - "test:parse"
-    dir: ./internal/bicep
-    cmds:
-      - gotestsum -f testname -- -run "TestUpdate"
-    silent: true
-
-  test:bicep:parse-update:
-    desc: Run tests for bicep package's  parse and update methods combined
-    aliases:
-      - "test:pu"
-      - "test:parse-update"
-    dir: ./internal/bicep
-    cmds:
-      - gotestsum -f testname -- -run "TestParseUpdate"
-    silent: true
-
-  test:apiversions:
-    desc: Run tests for apiversions package
-    aliases:
-      - "test:apiversions"
-      - "test:azapi"
-    dir: ./internal/apiversions
-    cmds:
-      - gotestsum -f testname
-    silent: true
-
-  test:all:
+  test:
     desc: Run all tests for all packages
-    aliases:
-      - "test:all"
     cmds:
       - printf "---------- bicep ---------------------------------\n\n" && task test:bicep && printf "\n\n"
       - printf "---------- apiversions ---------------------------\n\n" && task test:apiversions && printf "\n\n"
     silent: true
 
-  test:coverage:
-    desc: Generate coverage report for all packages
-    aliases:
-      - "coverage"
+  test:bicep:
+    desc: Run tests for bicep package
+    dir: ./internal/bicep
+    cmds:
+      - gotestsum -f testname
+    silent: true
+
+  test:apiversions:
+    desc: Run tests for apiversions package
+    dir: ./internal/apiversions
+    cmds:
+      - gotestsum -f testname
+    silent: true
+
+  coverage:
+    desc: Generate coverage information for all packages
     dir: ./internal
     cmds:
       - go test -cover ./bicep
       - go test -cover ./apiversions
     silent: true
 
-  test:minimal:
-    desc: Run tests for all packages with minimal output
-    aliases:
-      - "test:minimal"
-      - "test:min"
-    dir: ./internal
-    cmds:
-      - gotestsum -f pkgname
-    silent: true
-
   #### Security ####
 
-  security:all:
+  security:
     desc: Run all security tasks
     cmds:
       - task security:gosec
@@ -171,20 +141,6 @@ tasks:
     desc: Build binary
     cmds:
       - go build -o ./bin/bruh ./cmd/bruh/main.go
-    silent: true
-
-  #### All ####
-
-  all:
-    desc: Run all tasks in order
-    aliases:
-      - "all"
-    cmds:
-      - printf "---------- LINT ----------------------------------\n\n" && task lint:all
-      - printf "---------- TEST ----------------------------------\n\n" && task test:all
-      - printf "---------- COVERAGE ------------------------------\n\n" && task test:coverage && printf "\n"
-      - printf "---------- SECURITY ------------------------------\n\n" && task security:all  && printf "\n"
-      - printf "---------- CLEAN ---------------------------------\n\n" && task clean
     silent: true
 
   #### Clean ####
