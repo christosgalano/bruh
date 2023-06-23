@@ -1,6 +1,7 @@
 package bicep
 
 import (
+	"path/filepath"
 	"reflect"
 	"strings"
 	"testing"
@@ -40,7 +41,7 @@ func TestParseUpdateFile(t *testing.T) {
 				includePreview: false,
 			},
 			initial: types.BicepFile{
-				Name: "testdata/parse_update/azure.deploy.bicep",
+				Name: filepath.FromSlash("testdata/parse_update/azure.deploy.bicep"),
 				Resources: []types.Resource{
 					{
 						ID:                "Microsoft.Resources/resourceGroups",
@@ -51,7 +52,7 @@ func TestParseUpdateFile(t *testing.T) {
 				},
 			},
 			final: types.BicepFile{
-				Name: "testdata/parse_update/azure.deploy_updated.bicep",
+				Name: filepath.FromSlash("testdata/parse_update/azure.deploy_updated.bicep"),
 				Resources: []types.Resource{
 					{
 						ID:                "Microsoft.Resources/resourceGroups",

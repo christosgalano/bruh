@@ -3,6 +3,7 @@ package bicep
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/christosgalano/bruh/internal/types"
@@ -23,7 +24,7 @@ func TestUpdateFile(t *testing.T) {
 			name: "valid-file",
 			args: args{
 				bicepFile: &types.BicepFile{
-					Name: "testdata/update/azure.deploy.bicep",
+					Name: filepath.FromSlash("testdata/update/azure.deploy.bicep"),
 					Resources: []types.Resource{
 						{
 							ID:                "Microsoft.Resources/resourceGroups",
@@ -81,7 +82,7 @@ func TestUpdateDirectory(t *testing.T) {
 					Name: "testdata/update",
 					Files: []types.BicepFile{
 						{
-							Name: "testdata/update/azure.deploy.bicep",
+							Name: filepath.FromSlash("testdata/update/azure.deploy.bicep"),
 							Resources: []types.Resource{
 								{
 									ID:                "Microsoft.Resources/resourceGroups",
@@ -98,7 +99,7 @@ func TestUpdateDirectory(t *testing.T) {
 							},
 						},
 						{
-							Name: "testdata/update/modules/compute.bicep",
+							Name: filepath.FromSlash("testdata/update/modules/compute.bicep"),
 							Resources: []types.Resource{
 								{
 									ID:                "Microsoft.Web/serverfarms",
@@ -133,7 +134,7 @@ func TestUpdateDirectory(t *testing.T) {
 							},
 						},
 						{
-							Name: "testdata/update/modules/identity.bicep",
+							Name: filepath.FromSlash("testdata/update/modules/identity.bicep"),
 							Resources: []types.Resource{
 								{
 									ID:                "Microsoft.ManagedIdentity/userAssignedIdentities",
