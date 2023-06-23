@@ -1,13 +1,16 @@
 version: "3"
 
 tasks:
+  #### Default ####
+
   default:
     desc: List all tasks
     cmds:
       - task -l
     silent: true
 
-  # Lint
+  #### Lint ####
+
   lint:fmt:
     desc: Format code
     aliases:
@@ -23,7 +26,7 @@ tasks:
       - "vet"
     cmds:
       - go vet ./internal/*
-      - go vet ./main.go
+      - go vet ./cmd/*
     silent: true
 
   lint:revive:
@@ -33,7 +36,7 @@ tasks:
       - "revive"
     cmds:
       - revive -config revive.toml -formatter friendly ./internal/*
-      - revive -config revive.toml -formatter friendly ./main.go
+      - revive -config revive.toml -formatter friendly ./cmd/*
     silent: true
 
   lint:all:
@@ -44,8 +47,9 @@ tasks:
       - task lint:revive
     silent: true
 
-  # Test
-  test:internal:bicep:
+  #### Test ####
+
+  test:bicep:
     desc: Run tests for bicep package
     aliases:
       - "test:bicep"
@@ -54,7 +58,7 @@ tasks:
       - gotestsum -f testname
     silent: true
 
-  test:internal:bicep:parse:
+  test:bicep:parse:
     desc: Run tests for bicep package's parse methods
     aliases:
       - "test:update"
@@ -64,28 +68,26 @@ tasks:
       - gotestsum -f testname -- -run "TestParse"
     silent: true
 
-  test:internal:bicep:update:
+  test:bicep:update:
     desc: Run tests for bicep package's update methods
     aliases:
       - "test:parse"
-      - "test:bicep:parse"
     dir: ./internal/bicep
     cmds:
       - gotestsum -f testname -- -run "TestUpdate"
     silent: true
 
-  test:internal:bicep:parse-update:
+  test:bicep:parse-update:
     desc: Run tests for bicep package's  parse and update methods combined
     aliases:
       - "test:pu"
       - "test:parse-update"
-      - "test:bicep:parse-update"
     dir: ./internal/bicep
     cmds:
       - gotestsum -f testname -- -run "TestParseUpdate"
     silent: true
 
-  test:internal:apiversions:
+  test:apiversions:
     desc: Run tests for apiversions package
     aliases:
       - "test:apiversions"
@@ -95,7 +97,7 @@ tasks:
       - gotestsum -f testname
     silent: true
 
-  test:internal:coverage:
+  test:coverage:
     desc: Generate coverage report for all packages
     aliases:
       - "test:coverage"
@@ -106,16 +108,16 @@ tasks:
       - go test -cover ./apiversions
     silent: true
 
-  test:internal:all:
+  test:all:
     desc: Run all tests for all packages
     aliases:
       - "test:all"
     cmds:
-      - printf "---------- bicep ---------------------------------\n\n" && task test:internal:bicep && printf "\n\n"
-      - printf "---------- apiversions ---------------------------\n\n" && task test:internal:apiversions && printf "\n\n"
+      - printf "---------- bicep ---------------------------------\n\n" && task test:bicep && printf "\n\n"
+      - printf "---------- apiversions ---------------------------\n\n" && task test:apiversions && printf "\n\n"
     silent: true
 
-  test:internal:minimal:
+  test:minimal:
     desc: Run tests for all packages with minimal output
     aliases:
       - "test:minimal"
@@ -125,32 +127,63 @@ tasks:
       - gotestsum -f pkgname
     silent: true
 
-  # Build
-  build:bruh:
-    desc: Build bruh
-    aliases:
-      - "build"
+  #### Security ####
+
+  security:all:
+    desc: Run all security tasks
     cmds:
-      - go build -o bruh ./main.go
+      - task security:gosec
+      - task security:govulncheck
     silent: true
 
-  # All
+  security:gosec:
+    desc: Run gosec
+    aliases:
+      - "gosec"
+    cmds:
+      - gosec -exclude=G104,G107,G118 ./internal/...
+      - gosec -exclude=G104,G107,G118 ./cmd/...
+    silent: true
+
+  security:govulncheck:
+    desc: Run govulncheck
+    aliases:
+      - "govulncheck"
+    cmds:
+      - govulncheck -v ./...
+      - task build
+      - govulncheck -mode=binary ./bin/bruh
+    silent: true
+
+  #### Build ####
+
+  build:
+    desc: Build binary
+    cmds:
+      - go build -o ./bin/bruh ./cmd/bruh/main.go
+    silent: true
+
+  #### All ####
+
   all:
     desc: Run all tasks in order
     aliases:
       - "all"
     cmds:
       - printf "---------- LINT ----------------------------------\n\n" && task lint:all
-      - printf "---------- TEST ----------------------------------\n\n" && task test:internal:all
+      - printf "---------- TEST ----------------------------------\n\n" && task test:all
       - printf "---------- COVERAGE ------------------------------\n\n" && task test:coverage && printf "\n"
-      - printf "---------- BUILD ---------------------------------\n\n" && task build:bruh
+      - printf "---------- SECURITY ------------------------------\n\n" && task security:all  && printf "\n"
+      - printf "---------- CLEAN ---------------------------------\n\n" && task clean
     silent: true
 
-  # Clean
+  #### Clean ####
+
   clean:
     desc: Clean binaries
     aliases:
       - "clean"
+    dir: ./bin
     cmds:
-      - rm ./bruh
+      - rm ./*
     silent: true
