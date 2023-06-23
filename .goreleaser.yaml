@@ -25,11 +25,11 @@ builds:
     ldflags:
       - -s -w
 
-gomod:
-  # Proxy a module from proxy.golang.org, making the builds verifiable.
-  # This will only be effective if running against a tag. Snapshots will ignore
-  # this setting.
-  proxy: true
+# gomod:
+#   # Proxy a module from proxy.golang.org, making the builds verifiable.
+#   # This will only be effective if running against a tag. Snapshots will ignore
+#   # this setting.
+#   proxy: true
 
 archives:
   - id: bruh
