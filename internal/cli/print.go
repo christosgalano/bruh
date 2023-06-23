@@ -52,12 +52,12 @@ func printDirectoryNormal(bicepDirectory *types.BicepDirectory, outdated bool, m
 		absolutePath = bicepDirectory.Name
 	}
 	fmt.Printf("%s:\n\n", absolutePath)
-	for _, file := range bicepDirectory.Files {
-		filename, err := filepath.Rel(bicepDirectory.Name, file.Name)
+	for i := range bicepDirectory.Files {
+		filename, err := filepath.Rel(bicepDirectory.Name, bicepDirectory.Files[i].Name)
 		if err != nil {
-			filename = file.Name
+			filename = bicepDirectory.Files[i].Name
 		}
-		printFileNormal(&file, filename, outdated, mode)
+		printFileNormal(&bicepDirectory.Files[i], filename, outdated, mode)
 	}
 }
 
