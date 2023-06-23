@@ -53,6 +53,7 @@ func ParseFile(filename string) (*types.BicepFile, error) {
 		return nil, err
 	}
 
+	filename = filepath.Clean(filename)
 	data, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
