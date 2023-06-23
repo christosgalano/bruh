@@ -1,0 +1,88 @@
+before:
+  hooks:
+    - go mod tidy
+
+project_name: bruh
+
+builds:
+  - id: bruh
+    binary: bruh
+    main: ./cmd/bruh
+    goos:
+      - linux
+      - windows
+      - darwin
+      - freebsd
+    goarch:
+      - amd64
+      - arm
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+
+gomod:
+  # Proxy a module from proxy.golang.org, making the builds verifiable.
+  # This will only be effective if running against a tag. Snapshots will ignore
+  # this setting.
+  proxy: true
+
+archives:
+  - id: bruh
+    builds:
+      - bruh
+    format: tar.gz
+    name_template: "{{.ProjectName}}_{{.Os}}_{{.Arch}}"
+    files:
+      - README.md
+      - LICENSE
+    format_overrides:
+      - goos: windows
+        format: zip
+    rlcp: true
+
+release:
+  draft: true
+
+checksum:
+  name_template: "bruh_checksums.txt"
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+sboms:
+  - artifacts: archive
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+nfpms:
+  - package_name: bruh
+    homepage: https://github.com/christosgalano/bruh
+    maintainer: Christos Galanopoulos <christosgalanop@gmail.com>
+    description: Command-line tool for scanning and updating the API version of Azure resources in Bicep files
+    license: Apache 2.0
+    formats:
+      - apk
+      - deb
+      - rpm
+    file_name_template: "{{.ProjectName}}_{{.Os}}_{{.Arch}}"
+
+brews:
+  - name: bruh
+    description: Command-line tool for scanning and updating the API version of Azure resources in Bicep files
+    license: Apache 2.0
+    homepage: https://github.com/christosgalano/bruh
+    folder: Formula
+    test: system "#{bin}/bruh", "--help"
+    commit_author:
+      name: bruh-bot
+      email: 106601941+bruh-bot@users.noreply.github.com
