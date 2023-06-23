@@ -97,17 +97,6 @@ tasks:
       - gotestsum -f testname
     silent: true
 
-  test:coverage:
-    desc: Generate coverage report for all packages
-    aliases:
-      - "test:coverage"
-      - "test:cov"
-    dir: ./internal
-    cmds:
-      - go test -cover ./bicep
-      - go test -cover ./apiversions
-    silent: true
-
   test:all:
     desc: Run all tests for all packages
     aliases:
@@ -115,6 +104,16 @@ tasks:
     cmds:
       - printf "---------- bicep ---------------------------------\n\n" && task test:bicep && printf "\n\n"
       - printf "---------- apiversions ---------------------------\n\n" && task test:apiversions && printf "\n\n"
+    silent: true
+
+  test:coverage:
+    desc: Generate coverage report for all packages
+    aliases:
+      - "coverage"
+    dir: ./internal
+    cmds:
+      - go test -cover ./bicep
+      - go test -cover ./apiversions
     silent: true
 
   test:minimal:
