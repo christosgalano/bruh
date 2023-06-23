@@ -5,10 +5,15 @@ on:
   push:
     branches:
       - main
+    tags:
+      - '*'
+    paths-ignore:
+      - 'Formula/*'
   pull_request:
     branches:
       - main
-  workflow_dispatch:
+    paths-ignore:
+      - 'Formula/*'
 
 concurrency:
   group: ${{ github.workflow }}
@@ -16,15 +21,20 @@ concurrency:
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    name: ci
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      matrix:
+        go-version: [1.19.x, 1.20.x]
+        platform: [ubuntu-latest, macos-latest, windows-latest]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
     
-    - name: Setup Go
+    - name: Setup Go ${{ matrix.go-version }}
       uses: actions/setup-go@v4
       with:
-        go-version: '>=1.20.0'
+        go-version: ${{ matrix.go-version }}
     
     - name: Install Task
       uses: arduino/setup-task@v1
@@ -33,16 +43,16 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Install Go tools
-      run: task install:tools
+      run: task setup
     
     - name: Lint
-      run: task lint:all
+      run: task lint
     
     - name: Test
-      run: task test:all
+      run: task test
     
     - name: Code Coverage
       run: task coverage
     
     - name: Security
-      run: task security:all
+      run: task security
