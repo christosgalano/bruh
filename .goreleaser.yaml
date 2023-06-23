@@ -58,6 +58,8 @@ snapshot:
 
 sboms:
   - artifacts: binary
+    documents:
+      - "{{ .Binary }}_{{ .Os }}_{{ .Arch }}.sbom.json"
 
 changelog:
   use: github
@@ -69,6 +71,7 @@ changelog:
       - "CONTRIBUTING.md"
       - "CODE_OF_CONDUCT.md"
       - "^testdata:"
+      - "*_test.go"
 
 nfpms:
   - package_name: bruh
