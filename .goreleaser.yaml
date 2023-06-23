@@ -57,7 +57,7 @@ snapshot:
   name_template: "{{ .Tag }}"
 
 sboms:
-  - artifacts: archive
+  - artifacts: binary
 
 changelog:
   use: github
