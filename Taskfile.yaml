@@ -194,6 +194,7 @@ tasks:
     aliases:
       - "clean"
     cmds:
-      - rm ./bin/bruh
-      - rm -rf ./dist
+      - rm ./bin/bruh 2> /dev/null
+      - rm -rf ./dist 2> /dev/null
     silent: true
+    ignore_error: true
