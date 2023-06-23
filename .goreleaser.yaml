@@ -1,8 +1,9 @@
+project_name: bruh
+
 before:
   hooks:
     - go mod tidy
-
-project_name: bruh
+    - go mod download
 
 builds:
   - id: bruh
@@ -47,22 +48,27 @@ archives:
 
 release:
   draft: true
+  mode: append
 
 checksum:
-  name_template: "bruh_checksums.txt"
+  name_template: "{{ .ProjectName }}_checksums.txt"
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  name_template: "{{ .Tag }}"
 
 sboms:
   - artifacts: archive
 
 changelog:
+  use: github
   sort: asc
   filters:
     exclude:
-      - "^docs:"
-      - "^test:"
+      - "README.md"
+      - "LICENSE"
+      - "CONTRIBUTING.md"
+      - "CODE_OF_CONDUCT.md"
+      - "^testdata:"
 
 nfpms:
   - package_name: bruh
@@ -83,6 +89,8 @@ brews:
     homepage: https://github.com/christosgalano/bruh
     folder: Formula
     test: system "#{bin}/bruh", "--help"
-    commit_author:
-      name: bruh-bot
-      email: 106601941+bruh-bot@users.noreply.github.com
+    tap:
+      owner: christosgalano
+      name: bruh
+      branch: main
+    install: bin.install "bruh"

@@ -193,7 +193,7 @@ tasks:
     desc: Clean binaries
     aliases:
       - "clean"
-    dir: ./bin
     cmds:
-      - rm ./*
+      - rm ./bin/bruh
+      - rm -rf ./dist
     silent: true
