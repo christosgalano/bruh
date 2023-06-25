@@ -99,6 +99,13 @@ tasks:
       - gotestsum -f testname
     silent: true
 
+  benchmark:apiversions:
+    desc: Run benchmarks for apiversions package
+    dir: ./internal/apiversions
+    cmds:
+      - go test -bench=. -benchmem -run=^Test -count 2
+    silent: true
+
   coverage:
     desc: Generate coverage information for all packages
     dir: ./internal

@@ -10,6 +10,8 @@ import (
 	"github.com/christosgalano/bruh/internal/types"
 )
 
+/// Unit Tests ///
+
 func Test_fetchResourcePage(t *testing.T) {
 	type args struct {
 		url string
@@ -59,7 +61,7 @@ func Test_extractAPIVersions(t *testing.T) {
 		{
 			name: "one-version",
 			args: args{
-				body:    "<a href=\"2021-02-01/virtualnetworks\">2021-02-01</a>",
+				body:    "href=\"2021-02-01/virtualnetworks\"",
 				pattern: `href="(\d{4}-\d{2}-\d{2})/virtualnetworks"`,
 			},
 			want:    []string{"2021-02-01"},
@@ -68,7 +70,7 @@ func Test_extractAPIVersions(t *testing.T) {
 		{
 			name: "two-versions",
 			args: args{
-				body:    "<a href=\"2021-02-01/virtualnetworks\">2021-02-01</a><a href=\"2022-02-01/virtualnetworks\">2022-02-01</a>",
+				body:    "href=\"2021-02-01/virtualnetworks\", href=\"2022-02-01/virtualnetworks\"",
 				pattern: `href="(\d{4}-\d{2}-\d{2})/virtualnetworks"`,
 			},
 			want:    []string{"2022-02-01", "2021-02-01"}, // Sorted in descending order
@@ -302,6 +304,93 @@ func TestUpdateBicepDirectory(t *testing.T) {
 		})
 	}
 }
+
+/// Benchmarks ///
+
+func Benchmark_fetchResourcePage(b *testing.B) {
+	url := "https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks"
+	for i := 0; i < b.N; i++ {
+		fetchResourcePage(url)
+	}
+}
+
+func Benchmark_extractAPIVersions(b *testing.B) {
+	body := "href=\"2021-02-01/virtualnetworks\", href=\"2022-02-01/virtualnetworks\", href=\"2022-02-01/virtualnetworks\""
+	pattern := `href="(\d{4}-\d{2}-\d{2})/virtualnetworks"`
+	for i := 0; i < b.N; i++ {
+		extractAPIVersions(body, pattern)
+	}
+}
+
+func BenchmarkUpdateResource(b *testing.B) {
+	resource := &types.Resource{
+		ID:        "Microsoft.Web/serverFarms",
+		Name:      "serverFarms",
+		Namespace: "Microsoft.Web",
+	}
+	for i := 0; i < b.N; i++ {
+		UpdateResource(resource)
+	}
+}
+
+func BenchmarkUpdateBicepFile(b *testing.B) {
+	bicepFile := &types.BicepFile{
+		Name: "test.bicep",
+		Resources: []types.Resource{
+			{
+				ID:        "Microsoft.Web/serverFarms",
+				Name:      "serverFarms",
+				Namespace: "Microsoft.Web",
+			},
+			{
+				ID:        "Microsoft.Web/sites",
+				Name:      "sites",
+				Namespace: "Microsoft.Web",
+			},
+			{
+				ID:        "Microsoft.Network/virtualNetworks",
+				Name:      "virtualNetworks",
+				Namespace: "Microsoft.Network",
+			},
+		},
+	}
+	for i := 0; i < b.N; i++ {
+		UpdateBicepFile(bicepFile)
+	}
+}
+
+func BenchmarkUpdateBicepDirectory(b *testing.B) {
+	bicepDirectory := &types.BicepDirectory{
+		Name: "test",
+		Files: []types.BicepFile{
+			{
+				Name: "test.bicep",
+				Resources: []types.Resource{
+					{
+						ID:        "Microsoft.Web/serverFarms",
+						Name:      "serverFarms",
+						Namespace: "Microsoft.Web",
+					},
+					{
+						ID:        "Microsoft.Web/sites",
+						Name:      "sites",
+						Namespace: "Microsoft.Web",
+					},
+					{
+						ID:        "Microsoft.Network/virtualNetworks",
+						Name:      "virtualNetworks",
+						Namespace: "Microsoft.Network",
+					},
+				},
+			},
+		},
+	}
+	for i := 0; i < b.N; i++ {
+		UpdateBicepDirectory(bicepDirectory)
+	}
+}
+
+/// Helping Functions ///
 
 // isSubset returns true if slice1 is a subset of slice2.
 func isSubset(slice1, slice2 []string) bool {

@@ -54,5 +54,8 @@ jobs:
     - name: Code Coverage
       run: task coverage
     
+    - name: Benchmark
+      run: task benchmark
+    
     - name: Security
       run: task security
