@@ -99,6 +99,12 @@ tasks:
       - gotestsum -f testname
     silent: true
 
+  benchmark:
+    desc: Run all benchmarks for all packages
+    cmds:
+      - printf "---------- apiversions ---------------------------\n\n" && task benchmark:apiversions && printf "\n\n"
+    silent: true
+
   benchmark:apiversions:
     desc: Run benchmarks for apiversions package
     dir: ./internal/apiversions
