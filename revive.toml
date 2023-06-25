@@ -26,6 +26,8 @@ enableAllRules = true
     Disabled = true
 [rule.deep-exit]
     Disabled = true
+[rule.comment-spacings]
+    Disabled = true
 
 # Rule tuning
 
@@ -45,4 +47,4 @@ enableAllRules = true
 
 ## Error handling
 [rule.unhandled-error]
-    Arguments =["fmt.Printf", "fmt.Println", "fmt.Fprintf", "fmt.Fprintln"]
+    Arguments = ["fmt.Printf", "fmt.Println", "fmt.Fprintf", "fmt.Fprintln"]

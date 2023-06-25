@@ -307,6 +307,8 @@ func TestUpdateBicepDirectory(t *testing.T) {
 
 /// Benchmarks ///
 
+//revive:disable:unhandled-error
+
 func Benchmark_fetchResourcePage(b *testing.B) {
 	url := "https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks"
 	for i := 0; i < b.N; i++ {
