@@ -1,11 +1,11 @@
 /*
-Package bicep provides a comprehensive set of functions to manipulate Bicep files and directories.
+Package bicep provides a set of functions to manipulate Bicep files and directories.
 
 It offers methods for parsing directories and files to extract valuable information regarding resource metadata, such as name and API version.
-The two main functions are ParseDirectory and ParseFile, which receive a directory or file path respectively and return a pointer to a BicepDirectory or BicepFile object.
+The two main functions are ParseDirectory and ParseFile, which receive a directory or file path, and return a pointer to a BicepDirectory or BicepFile object.
 
-The package also includes functions to update the API versions of existing Bicep files in place or create new ones. This can be done by calling
-UpdateDirectory or UpdateFile, which receive a pointer to a BicepDirectory or BicepFile object respectively.
+The package also includes functions to update the API versions of existing Bicep files in place or create new ones.
+This can be done by calling UpdateDirectory or UpdateFile, which receive a pointer to a BicepDirectory or BicepFile object.
 */
 package bicep
 
@@ -25,9 +25,8 @@ const (
 	pattern = `(?P<namespace>Microsoft\.[a-zA-Z]+)/(?P<resource>[a-zA-Z]+)@(?P<version>[0-9]{4}-[0-9]{2}-[0-9]{2}-preview|[0-9]{4}-[0-9]{2}-[0-9]{2})`
 )
 
-// validateBicepFile validates that a file exists has the .bicep extension.
-// If the file does not exist, is a directory, or does not have the .bicep extension,
-// an error is returned.
+// validateBicepFile validates that a file exists and has the .bicep extension.
+// If the file does not exist, is a directory, or does not have the .bicep extension, the function returns an error.
 func validateBicepFile(path string) error {
 	f, err := os.Stat(path)
 	if err != nil {

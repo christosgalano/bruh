@@ -11,8 +11,8 @@ import (
 )
 
 // UpdateFile receives a pointer to a BicepFile object and updates the file with the new API versions for each resource.
-// inPlace determines whether the file should be updated in place or a new one should be created with suffix "_updated.bicep".
-// includePreview determines whether preview API versions should be considered.
+// inPlace determines whether the function will update the file in place or create a new one with the suffix "_updated.bicep".
+// includePreview determines whether preview API versions are considered.
 func UpdateFile(bicepFile *types.BicepFile, inPlace bool, includePreview bool) error {
 	file, err := os.Stat(bicepFile.Name)
 	if err != nil {
@@ -65,8 +65,8 @@ func UpdateFile(bicepFile *types.BicepFile, inPlace bool, includePreview bool) e
 }
 
 // UpdateDirectory receives a pointer to a BicepDirectory object and updates its files with the new API versions for each resource.
-// inPlace determines whether the files should be updated in place or new ones should be created with suffix "_updated.bicep".
-// includePreview determines whether preview API versions should be considered.
+// inPlace determines whether the function will update each file in place or create a new one with the suffix "_updated.bicep".
+// includePreview determines whether preview API versions are considered.
 func UpdateDirectory(bicepDirectory *types.BicepDirectory, inPlace bool, includePreview bool) error {
 	// Create a wait group to wait for all goroutines to finish
 	var wg sync.WaitGroup

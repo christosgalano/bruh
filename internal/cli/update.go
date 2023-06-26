@@ -18,7 +18,7 @@ var (
 	silent         bool
 )
 
-// updateCmd represents the update command
+// updateCmd represents the update command.
 var updateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Update a bicep file or a directory containing bicep files",
@@ -67,6 +67,7 @@ It is possible to update the files in place or create new files with "_updated.b
 	},
 }
 
+// init initializes the update command.
 func init() {
 	// Local flags
 
@@ -95,7 +96,7 @@ Use silent mode:
   bruh update --path ./main.bicep --silent`
 }
 
-// updateFile parses the given file, fetches the latest API versions for each Azure resource and updates the file.
+// updateFile parses the given file, fetches the latest API versions for each Azure resource, and updates the file.
 // If inPlace is true, the file will be updated in place; otherwise, a new file with "_updated.bicep" extension will be created.
 // If includePreview is true, preview API versions will be included; otherwise, only non-preview versions will be considered.
 func updateFile(path string, inPlace bool, includePreview bool) error {
@@ -118,7 +119,7 @@ func updateFile(path string, inPlace bool, includePreview bool) error {
 	return nil
 }
 
-// updateDirectory parses the given directory, fetches the latest API versions for each Azure resource and updates each file.
+// updateDirectory parses the given directory, fetches the latest API versions for each Azure resource, and updates each file.
 // If inPlace is true, the files will be updated in place; otherwise, new files with "_updated.bicep" extension will be created.
 // If includePreview is true, preview API versions will be included; otherwise, only non-preview versions will be considered.
 func updateDirectory(path string, inPlace bool, includePreview bool) error {

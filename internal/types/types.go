@@ -12,8 +12,8 @@ import (
 //   - ID: the resource ID (e.g. Microsoft.Network/virtualNetworks)
 //   - Name: the resource name (e.g. virtualNetworks)
 //   - Namespace: the resource namespace (e.g. Microsoft.Network)
-//   - CurrentAPIVersion: the used api version (e.g. 2021-02-01)
-//   - AvailableAPIVersions: the available api versions (e.g. [2021-02-01 2020-11-01])
+//   - CurrentAPIVersion: the used API version (e.g. 2021-02-01)
+//   - AvailableAPIVersions: the available API versions (e.g. [2021-02-01 2020-11-01])
 type Resource struct {
 	ID                   string
 	Name                 string
@@ -71,12 +71,12 @@ func (dir BicepDirectory) String() string {
 	return str
 }
 
-// Mode represents the mode of the cli (scan or update)
+// Mode represents the mode of the cli (scan or update).
 type Mode int8
 
 const (
-	ModeScan   Mode = iota // ModeScan corresponds maps to the `bruh scan` command
-	ModeUpdate             // ModeUpdate corresponds maps to the `bruh update` command
+	ModeScan   Mode = iota // ModeScan corresponds to the `bruh scan` command
+	ModeUpdate             // ModeUpdate corresponds to the `bruh update` command
 )
 
 // String returns a string representation of a types.Mode object.

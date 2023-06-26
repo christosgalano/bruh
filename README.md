@@ -1,5 +1,7 @@
 # bruh
 
+[![ci](https://github.com/christosgalano/bruh/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/christosgalano/bruh/actions/workflows/ci.yaml)
+
 ## Install
 
 ```bash

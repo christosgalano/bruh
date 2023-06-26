@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// rootCmd represents the base command when called without any subcommands
+// rootCmd represents the base command when called without any subcommands.
 var rootCmd = &cobra.Command{
 	Use:   "bruh",
 	Short: "bruh is a command-line tool for updating the API version of Azure resources in bicep files",
@@ -31,22 +31,22 @@ All the API versions are fetched from the official Microsoft learn website (http
 	},
 }
 
-// Execute executes the root command
+// Execute executes the root command.
 func Execute() error {
 	return rootCmd.Execute()
 }
 
-// addSubCommands adds subcommands to the root command
+// addSubCommands adds subcommands to the root command.
 func addSubCommands() {
 	rootCmd.AddCommand(scanCmd)
 	rootCmd.AddCommand(updateCmd)
 }
 
-// init initializes the root command
+// init initializes the root command.
 func init() {
 	// Subcommands
 	addSubCommands()
 
 	// Version
-	rootCmd.Version = "1.0.0"
+	rootCmd.Version = "v1.0.0"
 }

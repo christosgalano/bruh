@@ -59,7 +59,7 @@ Create a new bicep file with the "_updated.bicep" extension:
 
 	bruh update --path ./main.bicep
 
-Update a directory in-place including preview API versions:
+Update a directory in place including preview API versions:
 
 	bruh update --path ./bicep/modules --in-place --include-preview
 
@@ -69,7 +69,7 @@ Use silent mode:
 
 For full usage details, run `bruh update --help` or `bruh help update`.
 
-Note: all the API versions are fetched from the official Microsoft learn website (https://learn.microsoft.com/en-us/azure/templates/).
+Note: all the API versions are fetched from the official Microsoft Learn website (https://learn.microsoft.com/en-us/azure/templates/).
 */
 package main
 

@@ -17,7 +17,7 @@ var (
 	outdated bool
 )
 
-// scanCmd represents the scan command
+// scanCmd represents the scan command.
 var scanCmd = &cobra.Command{
 	Use:   "scan",
 	Short: "Scan a bicep file or a directory containing bicep files",
@@ -56,6 +56,7 @@ print out information regarding the API versions of Azure resources.`,
 	},
 }
 
+// init initializes the scan command.
 func init() {
 	// Local flags
 

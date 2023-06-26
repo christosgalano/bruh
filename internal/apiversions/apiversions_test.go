@@ -1,6 +1,3 @@
-/*
-Package apiversions provides functions to fetch and update API versions for Azure resources in a bicep file or directory.
-*/
 package apiversions
 
 import (

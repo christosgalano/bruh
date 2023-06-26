@@ -1,6 +1,6 @@
 /*
 Package apiversions provides functions to fetch and update API versions for Azure resources in a bicep file or directory.
-The API versions are fetched from the official Microsoft learn website (https://learn.microsoft.com/en-us/azure/templates/).
+The API versions are fetched from the official Microsoft Learn website (https://learn.microsoft.com/en-us/azure/templates/).
 */
 package apiversions
 
@@ -86,7 +86,7 @@ func UpdateBicepFile(bicepFile *types.BicepFile) error {
 	return nil
 }
 
-// UpdateBicepDirectory updates the available API versions for all resources in all bicep files in a given bicep directory.
+// UpdateBicepDirectory updates the available API versions for all resources in all bicep files of a given bicep directory.
 func UpdateBicepDirectory(bicepDirectory *types.BicepDirectory) error {
 	// Create a wait group to wait for all goroutines to finish
 	var wg sync.WaitGroup
