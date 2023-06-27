@@ -21,7 +21,7 @@ func printFileNormal(bicepFile *types.BicepFile, filename string, outdated bool,
 				fmt.Printf("  - %s is using the latest version %s\n", resource.ID, resource.CurrentAPIVersion)
 			}
 		} else {
-			fmt.Printf("  + Updated %s from version %s to %s\n", resource.ID, resource.CurrentAPIVersion, latestAPIVersion)
+			fmt.Printf("  + Updated %s to version %s\n", resource.ID, resource.CurrentAPIVersion)
 		}
 	}
 	fmt.Println()

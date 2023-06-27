@@ -12,10 +12,10 @@ import (
 )
 
 var (
-	updatePath     string
-	inPlace        bool
-	includePreview bool
-	silent         bool
+	updatePath           string
+	inPlace              bool
+	updateIncludePreview bool
+	silent               bool
 )
 
 // updateCmd represents the update command.
@@ -49,9 +49,9 @@ It is possible to update the files in place or create new files with "_updated.b
 
 		// Update file or directory
 		if fs.IsDir() {
-			err = updateDirectory(updatePath, inPlace, includePreview)
+			err = updateDirectory()
 		} else {
-			err = updateFile(updatePath, inPlace, includePreview)
+			err = updateFile()
 		}
 
 		// Restore stdout and stderr
@@ -79,7 +79,7 @@ func init() {
 	updateCmd.Flags().BoolVarP(&inPlace, "in-place", "i", false, "update the bicep files in place (if not set: create new files with \"_updated.bicep\" extension)")
 
 	// include-preview - optional
-	updateCmd.Flags().BoolVarP(&includePreview, "include-preview", "r", false, "include preview API versions (if not set: only non-preview versions will be considered)")
+	updateCmd.Flags().BoolVarP(&updateIncludePreview, "include-preview", "r", false, "include preview API versions (if not set: only non-preview versions will be considered)")
 
 	// silent - optional
 	updateCmd.Flags().BoolVarP(&silent, "silent", "s", false, "silent mode (no output)")
@@ -99,41 +99,41 @@ Use silent mode:
 // updateFile parses the given file, fetches the latest API versions for each Azure resource, and updates the file.
 // If inPlace is true, the file will be updated in place; otherwise, a new file with "_updated.bicep" extension will be created.
 // If includePreview is true, preview API versions will be included; otherwise, only non-preview versions will be considered.
-func updateFile(path string, inPlace bool, includePreview bool) error {
-	bicepFile, err := bicep.ParseFile(path)
+func updateFile() error {
+	bicepFile, err := bicep.ParseFile(updatePath)
 	if err != nil {
 		return err
 	}
 
-	err = apiversions.UpdateBicepFile(bicepFile)
+	err = apiversions.UpdateBicepFile(bicepFile, updateIncludePreview)
 	if err != nil {
 		return err
 	}
 
-	err = bicep.UpdateFile(bicepFile, inPlace, includePreview)
+	err = bicep.UpdateFile(bicepFile, inPlace)
 	if err != nil {
 		return err
 	}
 
-	printFileNormal(bicepFile, path, outdated, types.ModeUpdate)
+	printFileNormal(bicepFile, bicepFile.Name, outdated, types.ModeUpdate)
 	return nil
 }
 
 // updateDirectory parses the given directory, fetches the latest API versions for each Azure resource, and updates each file.
 // If inPlace is true, the files will be updated in place; otherwise, new files with "_updated.bicep" extension will be created.
 // If includePreview is true, preview API versions will be included; otherwise, only non-preview versions will be considered.
-func updateDirectory(path string, inPlace bool, includePreview bool) error {
-	bicepDirectory, err := bicep.ParseDirectory(path)
+func updateDirectory() error {
+	bicepDirectory, err := bicep.ParseDirectory(updatePath)
 	if err != nil {
 		return err
 	}
 
-	err = apiversions.UpdateBicepDirectory(bicepDirectory)
+	err = apiversions.UpdateBicepDirectory(bicepDirectory, updateIncludePreview)
 	if err != nil {
 		return err
 	}
 
-	err = bicep.UpdateDirectory(bicepDirectory, inPlace, includePreview)
+	err = bicep.UpdateDirectory(bicepDirectory, inPlace)
 	if err != nil {
 		return err
 	}

@@ -12,9 +12,10 @@ import (
 )
 
 var (
-	scanPath string
-	output   string
-	outdated bool
+	scanPath           string
+	output             string
+	outdated           bool
+	scanIncludePreview bool
 )
 
 // scanCmd represents the scan command.
@@ -44,9 +45,9 @@ print out information regarding the API versions of Azure resources.`,
 
 		// Scan file or directory
 		if fs.IsDir() {
-			err = scanDirectory(scanPath, output, outdated)
+			err = scanDirectory()
 		} else {
-			err = scanFile(scanPath, output, outdated)
+			err = scanFile()
 		}
 
 		if err != nil {
@@ -70,6 +71,9 @@ func init() {
 	// outdated - optional
 	scanCmd.Flags().BoolVarP(&outdated, "outdated", "u", false, "show only outdated resources")
 
+	// include-preview - optional
+	scanCmd.Flags().BoolVarP(&scanIncludePreview, "include-preview", "r", false, "include preview API versions (if not set: only non-preview versions will be considered for the latest version)")
+
 	// Examples
 	scanCmd.Example = `
 Scan a bicep file:
@@ -81,19 +85,20 @@ Scan a directory:
 Show only outdated resources:
   bruh scan --path ./main.bicep --outdated
 
-Print output in table format:
-  bruh scan --path ./bicep/modules --output table`
+Print output in table format including preview API versions:
+  bruh scan --path ./bicep/modules --output table --include-preview`
 }
 
 // scanFile parses a file, fetches the latest API versions of Azure resources and then prints out information regarding the status of those resources.
 // If outdated is true, only outdated resources are printed.
-func scanFile(path string, output string, outdated bool) error {
-	bicepFile, err := bicep.ParseFile(path)
+// If includePreview is true, preview API versions are also considered.
+func scanFile() error {
+	bicepFile, err := bicep.ParseFile(scanPath)
 	if err != nil {
 		return err
 	}
 
-	err = apiversions.UpdateBicepFile(bicepFile)
+	err = apiversions.UpdateBicepFile(bicepFile, scanIncludePreview)
 	if err != nil {
 		return err
 	}
@@ -109,13 +114,14 @@ func scanFile(path string, output string, outdated bool) error {
 
 // scanDirectory parses a directory, fetches the latest API versions of Azure resources and then prints out information regarding the status of those resources.
 // If outdated is true, only outdated resources are printed.
-func scanDirectory(path string, output string, outdated bool) error {
-	bicepDirectory, err := bicep.ParseDirectory(path)
+// If includePreview is true, preview API versions are also considered.
+func scanDirectory() error {
+	bicepDirectory, err := bicep.ParseDirectory(scanPath)
 	if err != nil {
 		return err
 	}
 
-	err = apiversions.UpdateBicepDirectory(bicepDirectory)
+	err = apiversions.UpdateBicepDirectory(bicepDirectory, scanIncludePreview)
 	if err != nil {
 		return err
 	}
