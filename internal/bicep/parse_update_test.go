@@ -11,10 +11,9 @@ import (
 
 func TestParseUpdateFile(t *testing.T) {
 	type args struct {
-		filename       string
-		resources      []types.Resource
-		inPlace        bool
-		includePreview bool
+		filename  string
+		resources []types.Resource
+		inPlace   bool
 	}
 	tests := []struct {
 		name    string
@@ -37,8 +36,7 @@ func TestParseUpdateFile(t *testing.T) {
 						},
 					},
 				},
-				inPlace:        false,
-				includePreview: false,
+				inPlace: false,
 			},
 			initial: types.BicepFile{
 				Name: filepath.FromSlash("testdata/parse_update/azure.deploy.bicep"),
@@ -82,7 +80,7 @@ func TestParseUpdateFile(t *testing.T) {
 			}
 
 			// Update file
-			err = UpdateFile(got, tt.args.inPlace, tt.args.includePreview)
+			err = UpdateFile(got, tt.args.inPlace)
 			if (err != nil) != tt.wantErr {
 				t.Fatalf("UpdateFile() error = %v, wantErr %v", err, tt.wantErr)
 			}

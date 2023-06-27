@@ -67,10 +67,10 @@ func Test_extractAPIVersions(t *testing.T) {
 		{
 			name: "two-versions",
 			args: args{
-				body:    "href=\"2021-02-01/virtualnetworks\", href=\"2022-02-01/virtualnetworks\"",
-				pattern: `href="(\d{4}-\d{2}-\d{2})/virtualnetworks"`,
+				body:    "href=\"2021-02-01/virtualnetworks\", href=\"2022-02-01/virtualnetworks\", href=\"2022-02-01-preview/virtualnetworks\"",
+				pattern: `href="(\d{4}-\d{2}-\d{2}|\d{4}-\d{2}-\d{2}-preview)/virtualnetworks"`,
 			},
-			want:    []string{"2022-02-01", "2021-02-01"}, // Sorted in descending order
+			want:    []string{"2022-02-01", "2022-02-01-preview", "2021-02-01"}, // Sorted in descending order (non-preview first)
 			wantErr: false,
 		},
 		{
@@ -98,7 +98,8 @@ func Test_extractAPIVersions(t *testing.T) {
 
 func TestUpdateResource(t *testing.T) {
 	type args struct {
-		resource *types.Resource
+		resource       *types.Resource
+		includePreview bool
 	}
 	tests := []struct {
 		name    string
@@ -114,9 +115,35 @@ func TestUpdateResource(t *testing.T) {
 					Name:      "serverFarms",
 					Namespace: "Microsoft.Web",
 				},
+				includePreview: true,
 			},
-			subset:  []string{"2022-03-01", "2021-03-01", "2021-02-01", "2021-01-15", "2021-01-01", "2020-12-01", "2020-10-01"},
+			subset:  []string{"2022-03-01", "2021-03-01", "2021-02-01", "2021-01-15", "2021-01-01"},
 			wantErr: false,
+		},
+		{
+			name: "with-preview",
+			args: args{
+				resource: &types.Resource{
+					ID:        "Microsoft.Insights/diagnosticSettings",
+					Name:      "diagnosticSettings",
+					Namespace: "Microsoft.Insights",
+				},
+				includePreview: true,
+			},
+			subset:  []string{"2021-05-01-preview", "2020-01-01-preview", "2017-05-01-preview", "2016-09-01", "2015-07-01"},
+			wantErr: false,
+		},
+		{
+			name: "without-preview",
+			args: args{
+				resource: &types.Resource{
+					ID:        "Microsoft.Insights/diagnosticSettings",
+					Name:      "diagnosticSettings",
+					Namespace: "Microsoft.Insights",
+				},
+				includePreview: false,
+			},
+			subset: []string{"2016-09-01", "2015-07-01"},
 		},
 		{
 			name: "invalid-resource",
@@ -126,6 +153,7 @@ func TestUpdateResource(t *testing.T) {
 					Name:      "invalid",
 					Namespace: "Microsoft.Web",
 				},
+				includePreview: true,
 			},
 			subset:  nil,
 			wantErr: true,
@@ -133,7 +161,7 @@ func TestUpdateResource(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := UpdateResource(tt.args.resource); (err != nil) != tt.wantErr {
+			if err := UpdateResource(tt.args.resource, true); (err != nil) != tt.wantErr {
 				t.Fatalf("UpdateResource() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
@@ -199,7 +227,7 @@ func TestUpdateBicepFile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := UpdateBicepFile(tt.args.bicepFile); (err != nil) != tt.wantErr {
+			if err := UpdateBicepFile(tt.args.bicepFile, true); (err != nil) != tt.wantErr {
 				t.Fatalf("UpdateBicepFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
@@ -283,7 +311,7 @@ func TestUpdateBicepDirectory(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := UpdateBicepDirectory(tt.args.bicepDirectory); (err != nil) != tt.wantErr {
+			if err := UpdateBicepDirectory(tt.args.bicepDirectory, true); (err != nil) != tt.wantErr {
 				t.Fatalf("UpdateBicepDirectory() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
@@ -328,7 +356,7 @@ func BenchmarkUpdateResource(b *testing.B) {
 		Namespace: "Microsoft.Web",
 	}
 	for i := 0; i < b.N; i++ {
-		UpdateResource(resource)
+		UpdateResource(resource, true)
 	}
 }
 
@@ -354,7 +382,7 @@ func BenchmarkUpdateBicepFile(b *testing.B) {
 		},
 	}
 	for i := 0; i < b.N; i++ {
-		UpdateBicepFile(bicepFile)
+		UpdateBicepFile(bicepFile, true)
 	}
 }
 
@@ -385,7 +413,7 @@ func BenchmarkUpdateBicepDirectory(b *testing.B) {
 		},
 	}
 	for i := 0; i < b.N; i++ {
-		UpdateBicepDirectory(bicepDirectory)
+		UpdateBicepDirectory(bicepDirectory, true)
 	}
 }
 
