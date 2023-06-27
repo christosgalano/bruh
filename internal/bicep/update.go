@@ -12,8 +12,7 @@ import (
 
 // UpdateFile receives a pointer to a BicepFile object and updates the file with the new API versions for each resource.
 // inPlace determines whether the function will update the file in place or create a new one with the suffix "_updated.bicep".
-// includePreview determines whether preview API versions are considered.
-func UpdateFile(bicepFile *types.BicepFile, inPlace bool, includePreview bool) error {
+func UpdateFile(bicepFile *types.BicepFile, inPlace bool) error {
 	file, err := os.Stat(bicepFile.Name)
 	if err != nil {
 		return fmt.Errorf("failed to get file info %s", err)
@@ -27,16 +26,6 @@ func UpdateFile(bicepFile *types.BicepFile, inPlace bool, includePreview bool) e
 
 	for i := range bicepFile.Resources {
 		latestAPIVersion := bicepFile.Resources[i].AvailableAPIVersions[0]
-
-		// If we don't want to include preview versions, find the latest non-preview version
-		if !includePreview && strings.HasSuffix(latestAPIVersion, "-preview") {
-			for _, version := range bicepFile.Resources[i].AvailableAPIVersions {
-				if !strings.HasSuffix(version, "-preview") {
-					latestAPIVersion = version
-					break
-				}
-			}
-		}
 
 		// Update the API version if needed
 		if bicepFile.Resources[i].CurrentAPIVersion != latestAPIVersion {
@@ -66,8 +55,7 @@ func UpdateFile(bicepFile *types.BicepFile, inPlace bool, includePreview bool) e
 
 // UpdateDirectory receives a pointer to a BicepDirectory object and updates its files with the new API versions for each resource.
 // inPlace determines whether the function will update each file in place or create a new one with the suffix "_updated.bicep".
-// includePreview determines whether preview API versions are considered.
-func UpdateDirectory(bicepDirectory *types.BicepDirectory, inPlace bool, includePreview bool) error {
+func UpdateDirectory(bicepDirectory *types.BicepDirectory, inPlace bool) error {
 	// Create a wait group to wait for all goroutines to finish
 	var wg sync.WaitGroup
 
@@ -76,13 +64,13 @@ func UpdateDirectory(bicepDirectory *types.BicepDirectory, inPlace bool, include
 	// Launch a goroutine for each file
 	for i := range bicepDirectory.Files {
 		wg.Add(1)
-		go func(file *types.BicepFile, inPlace bool, includePreview bool) {
+		go func(file *types.BicepFile, inPlace bool) {
 			defer wg.Done()
-			err := UpdateFile(file, inPlace, includePreview)
+			err := UpdateFile(file, inPlace)
 			if err != nil {
 				results <- err
 			}
-		}(&bicepDirectory.Files[i], inPlace, includePreview)
+		}(&bicepDirectory.Files[i], inPlace)
 	}
 
 	// Start a goroutine to close the channel once all goroutines are done

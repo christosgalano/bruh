@@ -11,9 +11,8 @@ import (
 
 func TestUpdateFile(t *testing.T) {
 	type args struct {
-		bicepFile      *types.BicepFile
-		inPlace        bool
-		includePreview bool
+		bicepFile *types.BicepFile
+		inPlace   bool
 	}
 	tests := []struct {
 		name    string
@@ -40,24 +39,22 @@ func TestUpdateFile(t *testing.T) {
 						},
 					},
 				},
-				inPlace:        true,
-				includePreview: false,
+				inPlace: true,
 			},
 			wantErr: false,
 		},
 		{
 			name: "invalid-file",
 			args: args{
-				bicepFile:      &types.BicepFile{},
-				inPlace:        true,
-				includePreview: false,
+				bicepFile: &types.BicepFile{},
+				inPlace:   true,
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := UpdateFile(tt.args.bicepFile, tt.args.inPlace, tt.args.includePreview); (err != nil) != tt.wantErr {
+			if err := UpdateFile(tt.args.bicepFile, tt.args.inPlace); (err != nil) != tt.wantErr {
 				t.Fatalf("UpdateFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -161,7 +158,7 @@ func TestUpdateDirectory(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := UpdateDirectory(tt.args.bicepDirectory, tt.args.inPlace, tt.args.includePreview); (err != nil) != tt.wantErr {
+			if err := UpdateDirectory(tt.args.bicepDirectory, tt.args.inPlace); (err != nil) != tt.wantErr {
 				t.Fatalf("UpdateDirectory() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
