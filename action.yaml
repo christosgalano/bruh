@@ -50,7 +50,7 @@ outputs:
 
 runs:
   using: "docker"
-  image: "./.github/action/Dockerfile"
+  image: "Dockerfile"
   args:
     - ${{ inputs.command }}
     - --path=${{ inputs.path }}
