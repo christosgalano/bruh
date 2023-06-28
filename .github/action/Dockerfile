@@ -6,9 +6,6 @@ RUN mkdir -p /app
 # Copy the files
 COPY . /app/
 
-# Install dependencies
-RUN cd /app/ && go mod download
-
 # Build main.go
 RUN CGO_ENABLED=0 GOOS=linux go build -o /app/bruh /app/cmd/bruh/main.go
 
