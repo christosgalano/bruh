@@ -74,8 +74,12 @@ else
     exit 1
 fi
 
-echo "result=$result" >> "$GITHUB_OUTPUT"
 echo "::debug::\$result: $result"
+
+EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+echo "result<<$EOF" >> "$GITHUB_OUTPUT"
+echo "$result" >> "$GITHUB_OUTPUT"
+echo "$EOF" >> "$GITHUB_OUTPUT"
 
 if [[ "$summary" == "--summary" ]]; then
   echo "$result" >> "$$GITHUB_STEP_SUMMARY"
