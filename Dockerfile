@@ -1,7 +1,4 @@
-FROM golang:1.20-alpine3.18
-
-# Install packages
-RUN apk add bash
+FROM golang:1.20
 
 # Make a directory for the files
 RUN mkdir -p /app
