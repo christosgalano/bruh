@@ -29,4 +29,5 @@ jobs:
           path: ./internal/bicep/testdata
           include-preview: true
           in-place: true
+          summary: true
 

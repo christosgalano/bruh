@@ -120,6 +120,7 @@ func printDirectoryMarkdown(bicepDirectory *types.BicepDirectory, outdated bool)
 	table.SetCenterSeparator("|")
 	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
 
+	fmt.Printf("## %s\n\n", bicepDirectory.Name)
 	for _, file := range bicepDirectory.Files {
 		for _, resource := range file.Resources {
 			filename, err := filepath.Rel(bicepDirectory.Name, file.Name)
