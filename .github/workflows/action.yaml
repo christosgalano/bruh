@@ -12,7 +12,7 @@ jobs:
       - uses: ./
         with:
           command: scan
-          path: .
+          path: ./internal/bicep/testdata
           include-preview: true
           output: table
           outdated: false
