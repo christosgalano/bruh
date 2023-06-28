@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Print args one per line
 for arg in "$@"; do
