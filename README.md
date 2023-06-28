@@ -14,14 +14,14 @@ go install github.com/christosgalano/bruh/cmd/bruh@latest
 
 It offers two main commands: [**scan**](#scan) and [**update**](#update).
 
-## Scan
+### Scan
 
 The scan command parses the given bicep file or directory, fetches the latest API versions for each Azure resource referenced in the file(s),
 and prints the results to stdout.
 
 It can be used to detect drift between the API versions used in the bicep files and the latest available ones.
 
-### Example usage
+Example usage:
 
 Scan a bicep file and print the results using the normal format:
 
@@ -36,7 +36,7 @@ Scan a directory and print only outdated resources using the table format:
 
 ```text
 > bruh scan --path ./bicep --output table --outdated
-{absolute-path}/bicep:
+./bicep:
 
 +------------------------+--------------------------------------------------+---------------------+--------------------+
 |          FILE          |                     RESOURCE                     | CURRENT API VERSION | LATEST API VERSION |
@@ -49,12 +49,12 @@ Scan a directory and print only outdated resources using the table format:
 +------------------------+--------------------------------------------------+---------------------+--------------------+
 ```
 
-## Update
+### Update
 
 The update command parses the given bicep file or directory, fetches the latest API versions for each Azure resource referenced in the file(s),
 and updates the file(s) in place or creates new ones with the "_updated.bicep" extension.
 
-### Example usage
+Example usage:
 
 Update a bicep file in place:
 
@@ -69,7 +69,7 @@ Update a directory and create new files with the "_updated.bicep" extension, inc
 
 ```text
 > bruh update --path ./bicep --include-preview
-{absolute-path}/bicep:
+./bicep:
 
 modules/compute_updated.bicep:
   + Updated Microsoft.Web/serverfarms from version 2022-03-01 to 2022-03-01
@@ -80,3 +80,105 @@ modules/identity_updated.bicep:
 ```
 
 **NOTE**: all the API versions are fetched from the official [Microsoft Learn website](https://learn.microsoft.com/en-us/azure/templates/).
+
+## GitHub Action
+
+bruh can also be used as a GitHub Action to scan and update bicep files in a repository.
+
+### Syntax
+
+```yaml
+  uses: christosgalano/bruh@v1.0.0
+  with:
+    command: scan | update              # command to execute (required)
+    path: ...                           # path to the bicep file or directory (required)
+    include-preview: true | false       # whether to include preview API versions (optional, default: false)
+    summary: true | false               # whether to print a step summary of the results (optional, default: false)
+    
+    # scan command only
+    output: normal | table | markdown   # output format for scan command (optional, default: normal)
+    outdated: true | false              # whether to print only outdated resources with scan command (optional, default: false)
+    
+    # update command only
+    in-place: true | false              # whether to update the bicep file(s) in place or create new ones with the "_updated.bicep" extension (optional, default: true)
+    silent: true | false                # whether to suppress all output (optional, default: false)
+```
+
+### Examples
+
+Scan a bicep directory, print the results using the normal format, and generate a step summary:
+
+```yaml
+- name: Scan bicep directory with bruh
+  uses: christosgalano/bruh@v1.0.0
+  with:
+    command: scan
+    path: ./bicep
+    output: normal
+    summary: true
+```
+
+Update a bicep file in place and suppress all output:
+
+```yaml
+- name: Update bicep file with bruh
+  uses: christosgalano/bruh@v1.0.0
+  with:
+    command: update
+    path: ./bicep/modules/compute.bicep
+    in-place: true
+    silent: true
+
+- name: Push changes
+  run: |
+    git config --global user.name 'Your Name'
+    git config --global user.email 'your-username@users.noreply.github.com'
+    git commit -am "Updated API versions of Azure resources"
+    git push
+```
+
+An end-to-end example of scanning a bicep directory, updating the outdated files, and pushing the changes:
+
+```yaml
+validate:
+  runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: bash
+        working-directory: bicep
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Update bicep directory with bruh
+      uses: christosgalano/bruh@v1.0.0
+      with:
+        command: update
+        path: ${{ github.workspace }}/bicep # need path relative to workspace
+        summary: true
+        in-place: true
+        include-preview: true
+
+      # Here we catch errors that might occur if the new API versions are not
+      # compatible with the used declarations.
+      - name: Lint template
+        run: az bicep build --file main.bicep
+
+      - name: Validate template
+        run: |
+          az deployment sub validate \
+          --name "${{ vars.DEPLOYMENT_NAME }}" \
+          --location "${{ vars.LOCATION }}" \
+          --template-file main.bicep \
+          --parameters main.parameters.json
+    
+    # Everything works correctly, so we can commit and push the changes.
+    - name: Push changes
+      run: |
+        git config --global user.name 'Your Name'
+        git config --global user.email 'your-username@users.noreply.github.com'
+        git commit -am "Updated API versions of Azure resources"
+        git push
+```
