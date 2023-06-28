@@ -35,7 +35,7 @@ if [[ "$command" == "scan" ]]; then
       exit 1
     fi
     output="$5"
-    if [[ "$output" != "normal" && "$output" != "table" ]]; then
+    if [[ "$output" != "--output=normal" && "$output" != "--output=table" ]]; then
       echo "Error: Invalid argument for --output (normal/table)"
       exit 1
     fi
