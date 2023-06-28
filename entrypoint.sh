@@ -35,9 +35,15 @@ if [[ "$command" == "scan" ]]; then
       exit 1
     fi
     output="$5"
+    if [[ "$output" != "normal" && "$output" != "table" ]]; then
+      echo "Error: Invalid argument for --output (normal/table)"
+      exit 1
+    fi
 
     echo "Outdated: $outdated"
     echo "Output: $output"
+
+    /app/bruh "$command" "$path" "$include_preview" "$outdated" "$output"
 
 elif [[ "$command" == "update" ]]; then
     in_place=$(extract_flag "$6")
@@ -55,6 +61,8 @@ elif [[ "$command" == "update" ]]; then
 
     echo "In place: $in_place"
     echo "Silent: $silent"
+
+    /app/bruh "$command" "$path" "$include_preview" "$in_place" "$silent"
 
 else 
     echo "Error: Command not found (scan/update)"

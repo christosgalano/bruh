@@ -1,15 +1,21 @@
 FROM golang:1.20-alpine3.18
 
-# Install dependencies
-RUN apk add --no-cache git bash curl
+# Install packages
+RUN apk add bash
 
 # Make a directory for the files
 RUN mkdir -p /app
 
-# Copies your code file from your action repository to the filesystem path `/` of the container
-COPY entrypoint.sh /app/entrypoint.sh
+# Install dependencies
+COPY go.mod go.sum /app/
+RUN go mod download
 
-# Make the entrypoint.sh executable
+# Copy and build main.go
+COPY cmd/bruh/main.go /app/
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/bruh /app/main.go
+
+# Copy and make entrypoint.sh executable
+COPY entrypoint.sh /app/
 RUN chmod +x /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]
