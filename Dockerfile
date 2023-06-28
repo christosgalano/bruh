@@ -5,7 +5,7 @@ RUN mkdir -p /app
 
 # Copy the files
 COPY internal /app/internal
-COPY cmd/ /app/cmd
+COPY cmd /app/cmd
 COPY go.mod go.sum /app/
 COPY entrypoint.sh /app/
 
