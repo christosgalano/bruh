@@ -19,7 +19,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o bruh ./cmd/bruh/main.go
 FROM alpine:3.18
 
 # Install bash
-RUN apk add --no-cache bash grep awk
+RUN apk add --no-cache bash
 
 # Copy the binary and entrypoint.sh from the build stage
 COPY --from=build /app/bruh /app/bruh
