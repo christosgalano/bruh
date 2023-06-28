@@ -54,8 +54,8 @@ runs:
   args:
     - ${{ inputs.command }}
     - --path=${{ inputs.path }}
-    - --include-preview
-    - --outdated
+    - --include-preview=${{ inputs.include-preview }}
+    - --outdated=${{ inputs.outdated }}
     - --output=${{ inputs.output }}
-    - --in-place
-    - --silent
+    - --in-place=${{ inputs.in-place }}
+    - --silent=${{ inputs.silent }}
