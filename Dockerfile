@@ -5,7 +5,7 @@ RUN mkdir -p /app
 
 # Install dependencies
 COPY go.mod go.sum /app/
-RUN go mod download
+RUN cd /app/ && go mod download
 
 # Copy and build main.go
 COPY cmd/bruh/main.go /app/
