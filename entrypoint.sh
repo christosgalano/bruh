@@ -19,9 +19,7 @@ else
 fi
 
 # Remove first 3 args
-unset 'args[0]'
-unset 'args[0]'
-unset 'args[0]'
+args=("${args[@]:3}")
 
 # Print args
 echo "Command: $command"
