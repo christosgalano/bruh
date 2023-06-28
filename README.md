@@ -137,7 +137,7 @@ Update a bicep file in place and suppress all output:
     git push
 ```
 
-An end-to-end example of scanning a bicep directory, updating the outdated files, and pushing the changes:
+A complete example of scanning a bicep directory, updating the outdated files, and pushing the changes:
 
 ```yaml
 validate:
