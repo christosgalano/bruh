@@ -77,7 +77,6 @@ echo "result<<$EOF" >> "$GITHUB_OUTPUT"
 echo "$result" >> "$GITHUB_OUTPUT"
 echo "$EOF" >> "$GITHUB_OUTPUT"
 
-echo "Summary: $summary"
 if [[ "$summary" == "--summary" ]]; then
-  echo "$result" >> "$$GITHUB_STEP_SUMMARY"
+  echo "$result" >> "$GITHUB_STEP_SUMMARY"
 fi
