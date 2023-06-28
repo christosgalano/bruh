@@ -7,14 +7,17 @@ RUN mkdir -p /app
 # Copy the project files to the /app directory
 COPY . /app
 
-# Run go mod download from the /app directory
-RUN cd /app && go mod download
+# Change the current working directory to /app
+WORKDIR /app
+
+# Run go mod download
+RUN go mod download
 
 # Build main.go
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/bruh /app/cmd/bruh/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o bruh ./cmd/bruh/main.go
 
 # Make entrypoint.sh executable
-RUN chmod +x /app/entrypoint.sh
+RUN chmod +x entrypoint.sh
 
 # Set the entrypoint
 ENTRYPOINT ["/app/entrypoint.sh"]
