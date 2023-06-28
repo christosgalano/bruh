@@ -1,5 +1,4 @@
-# Use the official Go image as the base
-FROM golang:1.20
+FROM golang:1.20 AS build
 
 # Create a directory for the files
 RUN mkdir -p /app
@@ -16,8 +15,18 @@ RUN go mod download
 # Build main.go
 RUN CGO_ENABLED=0 GOOS=linux go build -o bruh ./cmd/bruh/main.go
 
+# Final image
+FROM alpine:3.18
+
+# Install bash
+RUN apk add --no-cache bash
+
+# Copy the binary and entrypoint.sh from the build stage
+COPY --from=build /app/bruh /app/bruh
+COPY --from=build /app/entrypoint.sh /app/entrypoint.sh
+
 # Make entrypoint.sh executable
-RUN chmod +x entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Set the entrypoint
 ENTRYPOINT ["/app/entrypoint.sh"]
