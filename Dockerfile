@@ -1,5 +1,8 @@
 FROM golang:1.20-alpine3.18
 
+# Install dependencies
+RUN apk add --no-cache git bash curl
+
 # Make a directory for the files
 RUN mkdir -p /app
 
