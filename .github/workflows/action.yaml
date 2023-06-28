@@ -18,17 +18,15 @@ jobs:
           outdated: false
           summary: true
       
-      - run: echo "${{ steps.bruh.outputs.result }}"
 
-  # test-update:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./
-  #       id: bruh
-  #       with:
-  #         command: update
-  #         path: ./internal/bicep/testdata
-  #         include-preview: true
-  #         in-place: true
+  test-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          command: update
+          path: ./internal/bicep/testdata
+          include-preview: true
+          in-place: true
 
