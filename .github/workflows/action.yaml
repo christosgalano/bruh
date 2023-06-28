@@ -17,6 +17,8 @@ jobs:
           output: table
           outdated: false
           summary: true
+      
+      - run: echo "${{ steps.bruh.outputs.result }}"
 
   # test-update:
   #   runs-on: ubuntu-latest

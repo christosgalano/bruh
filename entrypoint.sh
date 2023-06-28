@@ -31,10 +31,6 @@ if [[ $return_code -eq 1 ]]; then
   exit 1
 fi
 
-echo "Command: $command"
-echo "Path: $path"
-echo "Include preview: $include_preview"
-
 # Get the appropriate arguments for the command
 if [[ "$command" == "scan" ]]; then
     outdated=$(extract_flag "$4")
@@ -81,6 +77,7 @@ echo "result<<$EOF" >> "$GITHUB_OUTPUT"
 echo "$result" >> "$GITHUB_OUTPUT"
 echo "$EOF" >> "$GITHUB_OUTPUT"
 
+echo "Summary: $summary"
 if [[ "$summary" == "--summary" ]]; then
   echo "$result" >> "$$GITHUB_STEP_SUMMARY"
 fi
