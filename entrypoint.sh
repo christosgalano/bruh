@@ -1,50 +1,62 @@
 #!/bin/bash
 
-# Install bash
-
-# Unpack args into an array
-args=("$@")
-# command_args=()
+# Function to extract flag
+extract_flag() {
+  if [[ "$1" == *=false ]]; then
+    echo ""
+  elif [[ "$1" == *=true ]]; then
+    echo "${1%=true}"
+  else
+    return 1
+  fi
+}
 
 # Get command, path and include-preview
 command="$1"
 path="$2"
-if [ "$3" = "--include-preview=true" ]; then
-    include_preview="--include-preview"
-elif [ "$3" = "--include-preview=false" ]; then
-    include_preview=""
-else
-    echo "Invalid value for --include-preview (true/false)"
-    exit 1
+
+include_preview=$(extract_flag "$3")
+return_code=$?
+if [[ $return_code -eq 1 ]]; then
+  echo "Error: Invalid argument for --include-preview (true/false))"
+  exit 1
 fi
 
-# Remove first 3 args
-args=("${args[@]:3}")
-
-# Print args
 echo "Command: $command"
 echo "Path: $path"
 echo "Include preview: $include_preview"
 
-for i in "${args[@]}"; do
-    echo "Arg: $i"
-done
+# Get the appropriate arguments for the command
+if [[ "$command" == "scan" ]]; then
+    outdated=$(extract_flag "$4")
+    return_code=$?
+    if [[ $return_code -eq 1 ]]; then
+      echo "Error: Invalid argument for --outdated (true/false))"
+      exit 1
+    fi
+    output="$5"
 
-# # If command is "scan"
-# if [ "$command" = "scan" ]; then
-    
-#     for i in "${args[@]}"; do
-#         # if arg starts with "--include-preview"
+    echo "Outdated: $outdated"
+    echo "Output: $output"
 
+elif [[ "$command" == "update" ]]; then
+    in_place=$(extract_flag "$6")
+    return_code=$?
+    if [[ $return_code -eq 1 ]]; then
+      echo "Error: Invalid argument for --in-place (true/false))"
+      exit 1
+    fi
+    silent=$(extract_flag "$7")
+    return_code=$?
+    if [[ $return_code -eq 1 ]]; then
+      echo "Error: Invalid argument for --silent (true/false))"
+      exit 1
+    fi
 
-#     done
+    echo "In place: $in_place"
+    echo "Silent: $silent"
 
-# elif [ "$command" = "connect" ]; then
-#     for i in "${args[@]}"; do
-#         echo "Arg: $i"
-#     done
-
-# else 
-#     echo "Command not found"
-#     exit 1
-# fi
+else 
+    echo "Error: Command not found (scan/update)"
+    exit 1
+fi
