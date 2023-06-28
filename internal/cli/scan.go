@@ -26,7 +26,7 @@ var scanCmd = &cobra.Command{
 print out information regarding the API versions of Azure resources.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Invalid output format
-		if output != "normal" && output != "table" {
+		if output != "normal" && output != "table" && output != "markdown" {
 			fmt.Fprintf(os.Stderr, "Error: invalid output format %s\n", output)
 			cmd.Usage()
 			os.Exit(1)
@@ -66,7 +66,7 @@ func init() {
 	scanCmd.MarkFlagRequired("path")
 
 	// output - optional
-	scanCmd.Flags().StringVarP(&output, "output", "o", "normal", "output format (normal, table)")
+	scanCmd.Flags().StringVarP(&output, "output", "o", "normal", "output format (normal, table, markdown)")
 
 	// outdated - optional
 	scanCmd.Flags().BoolVarP(&outdated, "outdated", "u", false, "show only outdated resources")
@@ -82,8 +82,8 @@ Scan a bicep file:
 Scan a directory:
   bruh scan --path ./bicep/modules
 
-Show only outdated resources:
-  bruh scan --path ./main.bicep --outdated
+Show only outdated resources in markdown format:
+  bruh scan --path ./main.bicep --outdated --output markdown
 
 Print output in table format including preview API versions:
   bruh scan --path ./bicep/modules --output table --include-preview`
@@ -103,10 +103,13 @@ func scanFile() error {
 		return err
 	}
 
-	if output == "table" {
-		printFileTable(bicepFile, outdated)
-	} else {
+	switch output {
+	case "normal":
 		printFileNormal(bicepFile, bicepFile.Name, outdated, types.ModeScan)
+	case "table":
+		printFileTable(bicepFile, outdated)
+	case "markdown":
+		printFileMarkdown(bicepFile, outdated)
 	}
 
 	return nil
@@ -126,10 +129,13 @@ func scanDirectory() error {
 		return err
 	}
 
-	if output == "table" {
-		printDirectoryTable(bicepDirectory, outdated)
-	} else {
+	switch output {
+	case "normal":
 		printDirectoryNormal(bicepDirectory, outdated, types.ModeScan)
+	case "table":
+		printDirectoryTable(bicepDirectory, outdated)
+	case "markdown":
+		printDirectoryMarkdown(bicepDirectory, outdated)
 	}
 
 	return nil
