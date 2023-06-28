@@ -3,16 +3,19 @@ FROM golang:1.20
 # Make a directory for the files
 RUN mkdir -p /app
 
-# Install dependencies
+# Copy the files
+COPY internal /app/internal
+COPY cmd/ /app/cmd
 COPY go.mod go.sum /app/
+COPY entrypoint.sh /app/
+
+# Install dependencies
 RUN cd /app/ && go mod download
 
-# Copy and build main.go
-COPY cmd/bruh/main.go /app/
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/bruh /app/main.go
+# Build main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/bruh /app/cmd/bruh/main.go
 
-# Copy and make entrypoint.sh executable
-COPY entrypoint.sh /app/
+# Make entrypoint.sh executable
 RUN chmod +x /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]
