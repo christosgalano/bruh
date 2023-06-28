@@ -16,5 +16,11 @@ jobs:
           include-preview: true
           output: table
           outdated: false
+
+      - uses: ./
+        with:
+          command: update
+          path: ./internal/bicep/testdata
+          include-preview: true
           in-place: true
           silent: false
