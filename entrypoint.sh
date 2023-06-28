@@ -16,7 +16,7 @@ result=""
 summary=$(extract_flag "$8")
 return_code=$?
 if [[ $return_code -eq 1 ]]; then
-  echo "Error: Invalid argument for --summary (true/false)"
+  echo "Error: Invalid argument for --summary (true | false)"
   exit 1
 fi
 
@@ -27,7 +27,7 @@ path="$2"
 include_preview=$(extract_flag "$3")
 return_code=$?
 if [[ $return_code -eq 1 ]]; then
-  echo "Error: Invalid argument for --include-preview (true/false)"
+  echo "Error: Invalid argument for --include-preview (true | false)"
   exit 1
 fi
 
@@ -36,12 +36,12 @@ if [[ "$command" == "scan" ]]; then
     outdated=$(extract_flag "$4")
     return_code=$?
     if [[ $return_code -eq 1 ]]; then
-      echo "Error: Invalid argument for --outdated (true/false)"
+      echo "Error: Invalid argument for --outdated (true | false)"
       exit 1
     fi
     output="$5"
-    if [[ "$output" != "--output=normal" && "$output" != "--output=table" ]]; then
-      echo "Error: Invalid argument for --output (normal/table)"
+    if [[ "$output" != *=normal && "$output" != *=table && "$output" != *=markdown ]]; then
+      echo "Error: Invalid argument for --output (normal | table | markdown)"
       exit 1
     fi
 
@@ -51,13 +51,13 @@ elif [[ "$command" == "update" ]]; then
     in_place=$(extract_flag "$6")
     return_code=$?
     if [[ $return_code -eq 1 ]]; then
-      echo "Error: Invalid argument for --in-place (true/false)"
+      echo "Error: Invalid argument for --in-place (true | false)"
       exit 1
     fi
     silent=$(extract_flag "$7")
     return_code=$?
     if [[ $return_code -eq 1 ]]; then
-      echo "Error: Invalid argument for --silent (true/false)"
+      echo "Error: Invalid argument for --silent (true | false)"
       exit 1
     fi
 
@@ -78,5 +78,8 @@ echo "$result" >> "$GITHUB_OUTPUT"
 echo "$EOF" >> "$GITHUB_OUTPUT"
 
 if [[ "$summary" == "--summary" ]]; then
+  if [[ "$command" == "scan" && "$output" != *=markdown ]]; then
+    result=$(eval "/app/bruh $command $path $include_preview $outdated --output=markdown")
+  fi
   echo "$result" >> "$GITHUB_STEP_SUMMARY"
 fi

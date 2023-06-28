@@ -29,7 +29,7 @@ inputs:
     default: "false"
 
   output:
-    description: "The output format (normal or table) (only for scan command)"
+    description: "The output format (normal | table | markdown) (only for scan command)"
     required: false
     default: "normal"
 
