@@ -6,7 +6,7 @@
 args=("$@")
 
 command="$1"
-unset 'array[0]'
+unset 'args[0]'
 
 # Print args
 echo "Command: $command"
