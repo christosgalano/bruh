@@ -45,6 +45,27 @@ func printFileTable(bicepFile *types.BicepFile, outdated bool) {
 	fmt.Println()
 }
 
+// printFileTable prints the file's information in tabular Markdown format.
+func printFileMarkdown(bicepFile *types.BicepFile, outdated bool) {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Resource", "Current API Version", "Latest API Version"})
+	table.SetColumnAlignment([]int{tablewriter.ALIGN_LEFT, tablewriter.ALIGN_CENTER, tablewriter.ALIGN_CENTER})
+
+	// Markdown specific
+	table.SetCenterSeparator("|")
+	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+
+	fmt.Printf("%s:\n", bicepFile.Name)
+	for _, resource := range bicepFile.Resources {
+		if outdated && (resource.CurrentAPIVersion == resource.AvailableAPIVersions[0]) {
+			continue
+		}
+		table.Append([]string{resource.ID, resource.CurrentAPIVersion, resource.AvailableAPIVersions[0]})
+	}
+	table.Render()
+	fmt.Println()
+}
+
 // printDirectoryNormal prints the directory's information in normal format.
 func printDirectoryNormal(bicepDirectory *types.BicepDirectory, outdated bool, mode types.Mode) {
 	absolutePath, err := filepath.Abs(bicepDirectory.Name)
@@ -70,11 +91,36 @@ func printDirectoryTable(bicepDirectory *types.BicepDirectory, outdated bool) {
 	table.SetAutoMergeCellsByColumnIndex([]int{0})
 	table.SetRowLine(true)
 
-	absolutePath, err := filepath.Abs(bicepDirectory.Name)
-	if err != nil {
-		absolutePath = bicepDirectory.Name
+	fmt.Printf("%s:\n\n", bicepDirectory.Name)
+	for _, file := range bicepDirectory.Files {
+		for _, resource := range file.Resources {
+			filename, err := filepath.Rel(bicepDirectory.Name, file.Name)
+			if err != nil {
+				filename = file.Name
+			}
+			if outdated && (resource.CurrentAPIVersion == resource.AvailableAPIVersions[0]) {
+				continue
+			}
+			table.Append([]string{filename, resource.ID, resource.CurrentAPIVersion, resource.AvailableAPIVersions[0]})
+		}
 	}
-	fmt.Printf("%s:\n\n", absolutePath)
+	table.Render()
+	fmt.Println()
+}
+
+// printDirectoryMarkdown prints the directory's information in tabular Markdown format.
+func printDirectoryMarkdown(bicepDirectory *types.BicepDirectory, outdated bool) {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"File", "Resource", "Current API Version", "Latest API Version"})
+	table.SetColumnAlignment([]int{tablewriter.ALIGN_LEFT, tablewriter.ALIGN_LEFT, tablewriter.ALIGN_CENTER, tablewriter.ALIGN_CENTER})
+	table.SetAutoMergeCellsByColumnIndex([]int{0})
+
+	// Markdown specific
+	table.SetRowLine(false)
+	table.SetCenterSeparator("|")
+	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+
+	fmt.Printf("## %s\n\n", bicepDirectory.Name)
 	for _, file := range bicepDirectory.Files {
 		for _, resource := range file.Resources {
 			filename, err := filepath.Rel(bicepDirectory.Name, file.Name)
