@@ -11,6 +11,15 @@ extract_flag() {
   fi
 }
 
+# GitHub Actions related
+result=""
+summary=$(extract_flag "$8")
+return_code=$?
+if [[ $return_code -eq 1 ]]; then
+  echo "Error: Invalid argument for --summary (true/false)"
+  exit 1
+fi
+
 # Get command, path and include-preview
 command="$1"
 path="$2"
@@ -18,7 +27,7 @@ path="$2"
 include_preview=$(extract_flag "$3")
 return_code=$?
 if [[ $return_code -eq 1 ]]; then
-  echo "Error: Invalid argument for --include-preview (true/false))"
+  echo "Error: Invalid argument for --include-preview (true/false)"
   exit 1
 fi
 
@@ -31,7 +40,7 @@ if [[ "$command" == "scan" ]]; then
     outdated=$(extract_flag "$4")
     return_code=$?
     if [[ $return_code -eq 1 ]]; then
-      echo "Error: Invalid argument for --outdated (true/false))"
+      echo "Error: Invalid argument for --outdated (true/false)"
       exit 1
     fi
     output="$5"
@@ -40,31 +49,34 @@ if [[ "$command" == "scan" ]]; then
       exit 1
     fi
 
-    echo "Outdated: $outdated"
-    echo "Output: $output"
-
-    /app/bruh "$command" "$path" "$include_preview" "$outdated" "$output"
+    result=$(eval "/app/bruh $command $path $include_preview $outdated $output")
 
 elif [[ "$command" == "update" ]]; then
     in_place=$(extract_flag "$6")
     return_code=$?
     if [[ $return_code -eq 1 ]]; then
-      echo "Error: Invalid argument for --in-place (true/false))"
+      echo "Error: Invalid argument for --in-place (true/false)"
       exit 1
     fi
     silent=$(extract_flag "$7")
     return_code=$?
     if [[ $return_code -eq 1 ]]; then
-      echo "Error: Invalid argument for --silent (true/false))"
+      echo "Error: Invalid argument for --silent (true/false)"
       exit 1
     fi
 
     echo "In place: $in_place"
     echo "Silent: $silent"
 
-    /app/bruh "$command" "$path" "$include_preview" "$in_place" "$silent"
-
+    result=$(eval "/app/bruh $command $path $include_preview $in_place $silent")
 else 
     echo "Error: Command not found (scan/update)"
     exit 1
+fi
+
+echo "result=$result" >> "$GITHUB_OUTPUT"
+echo "::debug::\$result: $result"
+
+if [[ "$summary" == "--summary" ]]; then
+  echo "$result" >> "$$GITHUB_STEP_SUMMARY"
 fi

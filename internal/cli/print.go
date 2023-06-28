@@ -33,6 +33,7 @@ func printFileTable(bicepFile *types.BicepFile, outdated bool) {
 	table.SetHeader([]string{"Resource", "Current API Version", "Latest API Version"})
 	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
 	table.SetColumnAlignment([]int{tablewriter.ALIGN_LEFT, tablewriter.ALIGN_CENTER, tablewriter.ALIGN_CENTER})
+	table.SetCenterSeparator("|")
 
 	fmt.Printf("%s:\n", bicepFile.Name)
 	for _, resource := range bicepFile.Resources {
@@ -68,6 +69,7 @@ func printDirectoryTable(bicepDirectory *types.BicepDirectory, outdated bool) {
 	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
 	table.SetColumnAlignment([]int{tablewriter.ALIGN_LEFT, tablewriter.ALIGN_LEFT, tablewriter.ALIGN_CENTER, tablewriter.ALIGN_CENTER})
 	table.SetAutoMergeCellsByColumnIndex([]int{0})
+	table.SetCenterSeparator("|")
 	table.SetRowLine(true)
 
 	absolutePath, err := filepath.Abs(bicepDirectory.Name)

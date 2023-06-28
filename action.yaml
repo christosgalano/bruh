@@ -44,9 +44,14 @@ inputs:
     required: false
     default: "false"
 
+  summary:
+    description: "Show action summary"
+    required: false
+    default: "false"
+
 outputs:
   result:
-    description: "The complete result from the yq command being run"
+    description: "The complete result from the bruh command being run"
 
 runs:
   using: "docker"
@@ -59,3 +64,4 @@ runs:
     - --output=${{ inputs.output }}
     - --in-place=${{ inputs.in-place }}
     - --silent=${{ inputs.silent }}
+    - --summary=${{ inputs.summary }}
