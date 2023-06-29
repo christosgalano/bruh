@@ -7,13 +7,10 @@ on:
       - main
     tags:
       - '*'
-    paths-ignore:
-      - 'Formula/*'
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - 'Formula/*'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}
