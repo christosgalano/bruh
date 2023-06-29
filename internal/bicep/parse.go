@@ -43,6 +43,7 @@ func validateBicepFile(path string) error {
 	if ext := filepath.Ext(path); ext != ".bicep" {
 		return fmt.Errorf("invalid file extension %q", ext)
 	}
+
 	return nil
 }
 

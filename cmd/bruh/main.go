@@ -26,21 +26,17 @@ and prints the results to stdout.
 
 Example usage:
 
-Scan a bicep file:
+Scan a bicep file and print the results using the normal format:
 
 	bruh scan --path ./main.bicep
 
-Scan a directory:
+Scan a directory and print only outdated resources using the table format:
 
-	bruh scan --path ./bicep/modules
+	bruh scan --path ./bicep/modules --output table --outdated
 
-Show only outdated resources:
+Scan a directory including preview API versions and print the results using the markdown format:
 
-	bruh scan --path ./main.bicep --outdated
-
-Print output in table format:
-
-	bruh scan --path ./bicep/modules --output table
+	bruh scan --path ./bicep/modules --output markdown --include-preview
 
 For full usage details, run `bruh scan --help` or `bruh help scan`.
 
@@ -53,11 +49,11 @@ Example usage:
 
 Update a bicep file in place:
 
-	bruh update --path ./main.bicep --in-place
+	bruh update --path ./bicep/main.bicep --in-place
 
 Create a new bicep file with the "_updated.bicep" extension:
 
-	bruh update --path ./main.bicep
+	bruh update --path ./bicep/main.bicep
 
 Update a directory in place including preview API versions:
 
@@ -65,7 +61,7 @@ Update a directory in place including preview API versions:
 
 Use silent mode:
 
-	bruh update --path ./main.bicep --silent
+	bruh update --path ./bicep/main.bicep --silent
 
 For full usage details, run `bruh update --help` or `bruh help update`.
 
