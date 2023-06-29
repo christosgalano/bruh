@@ -92,7 +92,7 @@ brews:
     folder: Formula
     test: system "#{bin}/bruh", "--help"
     repository:
-      name: homebrew-bruh
+      name: homebrew-christosgalano
       owner: christosgalano
     commit_author:
       name: christosgalano
