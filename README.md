@@ -2,13 +2,32 @@
 
 [![ci](https://github.com/christosgalano/bruh/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/christosgalano/bruh/actions/workflows/ci.yaml)
 
-## Install
+## Table of contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [GitHub Action](#github-action)
+
+## Installation
+
+### Homebrew
+
+```bash
+brew tap christosgalano/christosgalano
+brew install bruh
+```
+
+### Go
 
 ```bash
 go install github.com/christosgalano/bruh/cmd/bruh@latest
 ```
 
-## Overview
+### Binary
+
+Download the latest binary from the [releases page](https://github.com/christosgalano/bruh/releases/latest).
+
+## Usage
 
 **bruh (Bicep Resource Update Helper)** is a command-line tool for scanning and updating the API version of Azure resources in Bicep files.
 
