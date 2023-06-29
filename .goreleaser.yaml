@@ -92,6 +92,9 @@ brews:
     folder: Formula
     test: system "#{bin}/bruh", "--help"
     repository:
-      name: bruh
+      name: homebrew-bruh
       owner: christosgalano
+    commit_author:
+      name: christosgalano
+      email: christosgalanop@gmail.com
     install: bin.install "bruh"
