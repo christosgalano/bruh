@@ -11,7 +11,7 @@ class Bruh < Formula
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/christosgalano/bruh/releases/download/v1.0.0/bruh_darwin_arm64.tar.gz"
-      sha256 "979b15bb9a6fd008e05aa210a5ce72e549e739212c579cdbb4281f87c905ab03"
+      sha256 "95f139b4b2f8394b25c54fe13ea40bbfd5d953825e236828e1b3a5cf419c8c72"
 
       def install
         bin.install "bruh"
@@ -19,7 +19,7 @@ class Bruh < Formula
     end
     if Hardware::CPU.intel?
       url "https://github.com/christosgalano/bruh/releases/download/v1.0.0/bruh_darwin_amd64.tar.gz"
-      sha256 "36cc7aca2412ae9e257ceb5c9739c96eaaf8a4a1a59334112715af4301848277"
+      sha256 "35b062dc054d1d1df437d7947a56107725777dd2a21ace47611f1ef5bae02ed2"
 
       def install
         bin.install "bruh"
@@ -28,17 +28,17 @@ class Bruh < Formula
   end
 
   on_linux do
-    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/christosgalano/bruh/releases/download/v1.0.0/bruh_linux_arm64.tar.gz"
-      sha256 "cc58ba1de2a5310d62754fbefb499df0ac359a718cfc1968a4341cf531dd4429"
+    if Hardware::CPU.intel?
+      url "https://github.com/christosgalano/bruh/releases/download/v1.0.0/bruh_linux_amd64.tar.gz"
+      sha256 "b251bca6739023544fa72f02d1d08138b7297fe2b996d83b9cf95f2c9540af9a"
 
       def install
         bin.install "bruh"
       end
     end
-    if Hardware::CPU.intel?
-      url "https://github.com/christosgalano/bruh/releases/download/v1.0.0/bruh_linux_amd64.tar.gz"
-      sha256 "31735f9f77b756386b92f180942d52f0fbd8c2394a85a51a767d7b4e35b1a29c"
+    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
+      url "https://github.com/christosgalano/bruh/releases/download/v1.0.0/bruh_linux_arm64.tar.gz"
+      sha256 "460d7fe913ad8c0ab241032e575859743a3beb60fb26168baf4ee20add8663ca"
 
       def install
         bin.install "bruh"
@@ -46,7 +46,7 @@ class Bruh < Formula
     end
     if Hardware::CPU.arm? && !Hardware::CPU.is_64_bit?
       url "https://github.com/christosgalano/bruh/releases/download/v1.0.0/bruh_linux_arm.tar.gz"
-      sha256 "12d999ce9814699503e476db8ac3ed54432d26877af5af5fc23ac623d6cef438"
+      sha256 "6b5f1513f71153b05e49e62751b8fd12a46d25746f8cec46d9ff6c16a125f6a7"
 
       def install
         bin.install "bruh"
