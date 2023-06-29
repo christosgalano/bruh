@@ -44,7 +44,6 @@ archives:
     format_overrides:
       - goos: windows
         format: zip
-    rlcp: true
 
 release:
   draft: true
@@ -71,7 +70,7 @@ changelog:
       - "CONTRIBUTING.md"
       - "CODE_OF_CONDUCT.md"
       - "^testdata:"
-      - "*_test.go"
+      - ".*_test.go"
 
 nfpms:
   - package_name: bruh
@@ -92,8 +91,7 @@ brews:
     homepage: https://github.com/christosgalano/bruh
     folder: Formula
     test: system "#{bin}/bruh", "--help"
-    tap:
-      owner: christosgalano
+    repository:
       name: bruh
-      branch: main
+      owner: christosgalano
     install: bin.install "bruh"
