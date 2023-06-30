@@ -57,7 +57,6 @@ func readBicepFile(filePath string) ([]byte, error) {
 	}
 
 	// File is not cached, read it
-	filePath = filepath.Clean(filePath)
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
@@ -71,6 +70,8 @@ func readBicepFile(filePath string) ([]byte, error) {
 
 // ParseFile parses a file and returns a pointer to a BicepFile object.
 func ParseFile(filePath string) (*types.BicepFile, error) {
+	filePath = filepath.Clean(filePath)
+
 	data, err := readBicepFile(filePath)
 	if err != nil {
 		return nil, err
