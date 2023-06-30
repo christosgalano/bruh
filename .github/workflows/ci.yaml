@@ -57,7 +57,7 @@ jobs:
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: success() || failure()
       with:
-        check_name: test-results
+        check_name: Test Results
         junit_files: test-results.xml
         comment_mode: always
         fail_on: test failures
@@ -84,7 +84,7 @@ jobs:
     - name: Code coverage summary
       if: success() || failure()
       run: |
-        echo "## " >> $GITHUB_STEP_SUMMARY
+        echo "## Code Coverage Results" >> $GITHUB_STEP_SUMMARY
         cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
     - name: Add coverage PR comment
