@@ -23,7 +23,7 @@ func TestUpdateFile(t *testing.T) {
 			name: "valid-file",
 			args: args{
 				bicepFile: &types.BicepFile{
-					Path: filepath.FromSlash("testdata/update/azure.deploy.bicep"),
+					Path: "testdata/update/azure.deploy.bicep"),
 					Resources: []types.Resource{
 						{
 							ID:                "Microsoft.Resources/resourceGroups",
@@ -79,7 +79,7 @@ func TestUpdateDirectory(t *testing.T) {
 					Path: "testdata/update",
 					Files: []types.BicepFile{
 						{
-							Path: filepath.FromSlash("testdata/update/azure.deploy.bicep"),
+							Path: "testdata/update/azure.deploy.bicep",
 							Resources: []types.Resource{
 								{
 									ID:                "Microsoft.Resources/resourceGroups",
@@ -96,7 +96,7 @@ func TestUpdateDirectory(t *testing.T) {
 							},
 						},
 						{
-							Path: filepath.FromSlash("testdata/update/modules/compute.bicep"),
+							Path: "testdata/update/modules/compute.bicep",
 							Resources: []types.Resource{
 								{
 									ID:                "Microsoft.Web/serverfarms",
@@ -131,7 +131,7 @@ func TestUpdateDirectory(t *testing.T) {
 							},
 						},
 						{
-							Path: filepath.FromSlash("testdata/update/modules/identity.bicep"),
+							Path: "testdata/update/modules/identity.bicep",
 							Resources: []types.Resource{
 								{
 									ID:                "Microsoft.ManagedIdentity/userAssignedIdentities",

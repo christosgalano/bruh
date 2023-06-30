@@ -1,7 +1,6 @@
 package bicep
 
 import (
-	"path/filepath"
 	"reflect"
 	"testing"
 
@@ -61,7 +60,7 @@ func TestParseFile(t *testing.T) {
 			name: "testdata/parse/azure.deploy.bicep",
 			args: args{"testdata/parse/azure.deploy.bicep"},
 			want: types.BicepFile{
-				Path: filepath.FromSlash("testdata/parse/azure.deploy.bicep"),
+				Path: "testdata/parse/azure.deploy.bicep",
 				Resources: []types.Resource{
 					{
 						ID:                "Microsoft.Resources/resourceGroups",
@@ -77,7 +76,7 @@ func TestParseFile(t *testing.T) {
 			name: "compute.bicep",
 			args: args{"testdata/parse/modules/compute.bicep"},
 			want: types.BicepFile{
-				Path: filepath.FromSlash("testdata/parse/modules/compute.bicep"),
+				Path: "testdata/parse/modules/compute.bicep",
 				Resources: []types.Resource{
 					{
 						ID:                "Microsoft.Web/serverfarms",
@@ -143,7 +142,7 @@ func TestParseDirectory(t *testing.T) {
 				Path: "testdata/parse",
 				Files: []types.BicepFile{
 					{
-						Path: filepath.FromSlash("testdata/parse/azure.deploy.bicep"),
+						Path: "testdata/parse/azure.deploy.bicep",
 						Resources: []types.Resource{
 							{
 								ID:                "Microsoft.Resources/resourceGroups",
@@ -154,7 +153,7 @@ func TestParseDirectory(t *testing.T) {
 						},
 					},
 					{
-						Path: filepath.FromSlash("testdata/parse/modules/compute.bicep"),
+						Path: "testdata/parse/modules/compute.bicep",
 						Resources: []types.Resource{
 							{
 								ID:                "Microsoft.Web/serverfarms",
@@ -171,7 +170,7 @@ func TestParseDirectory(t *testing.T) {
 						},
 					},
 					{
-						Path: filepath.FromSlash("testdata/parse/modules/identity.bicep"),
+						Path: "testdata/parse/modules/identity.bicep",
 						Resources: []types.Resource{
 							{
 								ID:                "Microsoft.ManagedIdentity/userAssignedIdentities",
