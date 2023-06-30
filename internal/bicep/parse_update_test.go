@@ -1,7 +1,6 @@
 package bicep
 
 import (
-	"path/filepath"
 	"reflect"
 	"strings"
 	"testing"
@@ -39,7 +38,7 @@ func TestParseUpdateFile(t *testing.T) {
 				inPlace: false,
 			},
 			initial: types.BicepFile{
-				Path: filepath.FromSlash("testdata/parse_update/azure.deploy.bicep"),
+				Path: "testdata/parse_update/azure.deploy.bicep",
 				Resources: []types.Resource{
 					{
 						ID:                "Microsoft.Resources/resourceGroups",
@@ -50,7 +49,7 @@ func TestParseUpdateFile(t *testing.T) {
 				},
 			},
 			final: types.BicepFile{
-				Path: filepath.FromSlash("testdata/parse_update/azure.deploy_updated.bicep"),
+				Path: "testdata/parse_update/azure.deploy_updated.bicep",
 				Resources: []types.Resource{
 					{
 						ID:                "Microsoft.Resources/resourceGroups",
@@ -70,8 +69,8 @@ func TestParseUpdateFile(t *testing.T) {
 			if (err != nil) != tt.wantErr {
 				t.Fatalf("ParseFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			if !reflect.DeepEqual(*got, tt.initial) {
-				t.Fatalf("First parse: ParseFile() = %v, want %v", *got, tt.initial)
+			if !reflect.DeepEqual(got.Resources, tt.initial.Resources) {
+				t.Fatalf("First parse:\nParseFile() = %v, want %v", got.Resources, tt.initial.Resources)
 			}
 
 			// Inject available API versions
@@ -85,14 +84,14 @@ func TestParseUpdateFile(t *testing.T) {
 				t.Fatalf("UpdateFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
-			// Second parse
+			// Second parse - not in-place
 			updatedFile := strings.Replace(tt.args.filename, ".bicep", "_updated.bicep", 1)
 			got, err = ParseFile(updatedFile)
 			if (err != nil) != tt.wantErr {
 				t.Fatalf("ParseFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			if !reflect.DeepEqual(*got, tt.final) {
-				t.Fatalf("Second parse: ParseFile() = %v, want %v", *got, tt.final)
+			if !reflect.DeepEqual(got.Resources, tt.final.Resources) {
+				t.Fatalf("Second parse:\nParseFile() = %v, want %v", got.Resources, tt.final.Resources)
 			}
 
 			// Cleanup

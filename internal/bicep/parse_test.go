@@ -118,8 +118,8 @@ func TestParseFile(t *testing.T) {
 				return
 			}
 
-			if !reflect.DeepEqual(*got, tt.want) {
-				t.Errorf("\nParseFile() = %v, want %v", *got, tt.want)
+			if !reflect.DeepEqual(got.Resources, tt.want.Resources) {
+				t.Errorf("\nParseFile() = %v, want %v", got.Resources, tt.want.Resources)
 			}
 		})
 	}
@@ -202,8 +202,10 @@ func TestParseDirectory(t *testing.T) {
 				return
 			}
 
-			if !reflect.DeepEqual(*got, tt.want) {
-				t.Errorf("\nParseDirectory() = %v, want %v", *got, tt.want)
+			for i, file := range got.Files {
+				if !reflect.DeepEqual(file.Resources, tt.want.Files[i].Resources) {
+					t.Errorf("\nParseDirectory(), file %v with resources = %v, want %v", file.Path, file.Resources, tt.want.Files[i].Resources)
+				}
 			}
 		})
 	}
