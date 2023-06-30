@@ -39,7 +39,7 @@ func TestParseUpdateFile(t *testing.T) {
 				inPlace: false,
 			},
 			initial: types.BicepFile{
-				Name: filepath.FromSlash("testdata/parse_update/azure.deploy.bicep"),
+				Path: filepath.FromSlash("testdata/parse_update/azure.deploy.bicep"),
 				Resources: []types.Resource{
 					{
 						ID:                "Microsoft.Resources/resourceGroups",
@@ -50,7 +50,7 @@ func TestParseUpdateFile(t *testing.T) {
 				},
 			},
 			final: types.BicepFile{
-				Name: filepath.FromSlash("testdata/parse_update/azure.deploy_updated.bicep"),
+				Path: filepath.FromSlash("testdata/parse_update/azure.deploy_updated.bicep"),
 				Resources: []types.Resource{
 					{
 						ID:                "Microsoft.Resources/resourceGroups",

@@ -29,16 +29,16 @@ func (r Resource) String() string {
 }
 
 // BicepFile contains information about a bicep file:
-//   - Name: the name of the bicep file (e.g. virtualNetworks.bicep)
+//   - Path: the path to the bicep file (e.g. ./bicep/modules/virtualNetworks.bicep)
 //   - Resources: the bicep resources defined in the bicep file
 type BicepFile struct {
-	Name      string
+	Path      string
 	Resources []Resource
 }
 
 // String returns a string representation of a types.BicepFile object.
 func (file BicepFile) String() string {
-	str := fmt.Sprintf("%s:\n  - Resources:\n", file.Name)
+	str := fmt.Sprintf("%s:\n  - Resources:\n", file.Path)
 	for _, r := range file.Resources {
 		str += fmt.Sprintf("     - %s:\n\t+ Name: %s\n\t+ Namespace: %s\n\t+ Current API Version: %s\n\t+ Available API Versions: %v\n",
 			r.ID, r.Name, r.Namespace, r.CurrentAPIVersion, r.AvailableAPIVersions)
@@ -47,18 +47,18 @@ func (file BicepFile) String() string {
 }
 
 // BicepDirectory contains information about a bicep directory:
-//   - Name: the name of the bicep directory (e.g. virtualNetworks)
+//   - Path: the path to the bicep directory (e.g. ./bicep/modules)
 //   - Files: the bicep files in the bicep directory
 type BicepDirectory struct {
-	Name  string
+	Path  string
 	Files []BicepFile
 }
 
 // String returns a string representation of a types.BicepDirectory object.
 func (dir BicepDirectory) String() string {
-	str := fmt.Sprintf("%s:\n", dir.Name)
+	str := fmt.Sprintf("%s:\n", dir.Path)
 	for _, file := range dir.Files {
-		relName, err := filepath.Rel(dir.Name, file.Name)
+		relName, err := filepath.Rel(dir.Path, file.Path)
 		if err != nil {
 			panic(err)
 		}

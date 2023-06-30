@@ -34,7 +34,7 @@ func printFileTable(bicepFile *types.BicepFile, outdated bool) {
 	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: true})
 	table.SetColumnAlignment([]int{tablewriter.ALIGN_LEFT, tablewriter.ALIGN_CENTER, tablewriter.ALIGN_CENTER})
 
-	fmt.Printf("%s:\n", bicepFile.Name)
+	fmt.Printf("%s:\n", bicepFile.Path)
 	for _, resource := range bicepFile.Resources {
 		if outdated && (resource.CurrentAPIVersion == resource.AvailableAPIVersions[0]) {
 			continue
@@ -55,7 +55,7 @@ func printFileMarkdown(bicepFile *types.BicepFile, outdated bool) {
 	table.SetCenterSeparator("|")
 	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
 
-	fmt.Printf("%s:\n", bicepFile.Name)
+	fmt.Printf("%s:\n", bicepFile.Path)
 	for _, resource := range bicepFile.Resources {
 		if outdated && (resource.CurrentAPIVersion == resource.AvailableAPIVersions[0]) {
 			continue
@@ -68,15 +68,15 @@ func printFileMarkdown(bicepFile *types.BicepFile, outdated bool) {
 
 // printDirectoryNormal prints the directory's information in normal format.
 func printDirectoryNormal(bicepDirectory *types.BicepDirectory, outdated bool, mode types.Mode) {
-	absolutePath, err := filepath.Abs(bicepDirectory.Name)
+	absolutePath, err := filepath.Abs(bicepDirectory.Path)
 	if err != nil {
-		absolutePath = bicepDirectory.Name
+		absolutePath = bicepDirectory.Path
 	}
 	fmt.Printf("%s:\n\n", absolutePath)
 	for i := range bicepDirectory.Files {
-		filename, err := filepath.Rel(bicepDirectory.Name, bicepDirectory.Files[i].Name)
+		filename, err := filepath.Rel(bicepDirectory.Path, bicepDirectory.Files[i].Path)
 		if err != nil {
-			filename = bicepDirectory.Files[i].Name
+			filename = bicepDirectory.Files[i].Path
 		}
 		printFileNormal(&bicepDirectory.Files[i], filename, outdated, mode)
 	}
@@ -91,12 +91,12 @@ func printDirectoryTable(bicepDirectory *types.BicepDirectory, outdated bool) {
 	table.SetAutoMergeCellsByColumnIndex([]int{0})
 	table.SetRowLine(true)
 
-	fmt.Printf("%s:\n\n", bicepDirectory.Name)
+	fmt.Printf("%s:\n\n", bicepDirectory.Path)
 	for _, file := range bicepDirectory.Files {
 		for _, resource := range file.Resources {
-			filename, err := filepath.Rel(bicepDirectory.Name, file.Name)
+			filename, err := filepath.Rel(bicepDirectory.Path, file.Path)
 			if err != nil {
-				filename = file.Name
+				filename = file.Path
 			}
 			if outdated && (resource.CurrentAPIVersion == resource.AvailableAPIVersions[0]) {
 				continue
@@ -120,12 +120,12 @@ func printDirectoryMarkdown(bicepDirectory *types.BicepDirectory, outdated bool)
 	table.SetCenterSeparator("|")
 	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
 
-	fmt.Printf("## %s\n\n", bicepDirectory.Name)
+	fmt.Printf("## %s\n\n", bicepDirectory.Path)
 	for _, file := range bicepDirectory.Files {
 		for _, resource := range file.Resources {
-			filename, err := filepath.Rel(bicepDirectory.Name, file.Name)
+			filename, err := filepath.Rel(bicepDirectory.Path, file.Path)
 			if err != nil {
-				filename = file.Name
+				filename = file.Path
 			}
 			if outdated && (resource.CurrentAPIVersion == resource.AvailableAPIVersions[0]) {
 				continue

@@ -8,9 +8,9 @@ import (
 	"github.com/christosgalano/bruh/internal/types"
 )
 
-func Test_validateBicepFile(t *testing.T) {
+func Test_readBicepFile(t *testing.T) {
 	type args struct {
-		filename string
+		filePath string
 	}
 	tests := []struct {
 		name    string
@@ -40,7 +40,7 @@ func Test_validateBicepFile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := validateBicepFile(tt.args.filename); (err != nil) != tt.wantErr {
+			if _, err := readBicepFile(tt.args.filePath); (err != nil) != tt.wantErr {
 				t.Fatalf("ValidateBicepFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -49,7 +49,7 @@ func Test_validateBicepFile(t *testing.T) {
 
 func TestParseFile(t *testing.T) {
 	type args struct {
-		filename string
+		filePath string
 	}
 	tests := []struct {
 		name    string
@@ -61,7 +61,7 @@ func TestParseFile(t *testing.T) {
 			name: "testdata/parse/azure.deploy.bicep",
 			args: args{"testdata/parse/azure.deploy.bicep"},
 			want: types.BicepFile{
-				Name: filepath.FromSlash("testdata/parse/azure.deploy.bicep"),
+				Path: filepath.FromSlash("testdata/parse/azure.deploy.bicep"),
 				Resources: []types.Resource{
 					{
 						ID:                "Microsoft.Resources/resourceGroups",
@@ -77,7 +77,7 @@ func TestParseFile(t *testing.T) {
 			name: "compute.bicep",
 			args: args{"testdata/parse/modules/compute.bicep"},
 			want: types.BicepFile{
-				Name: filepath.FromSlash("testdata/parse/modules/compute.bicep"),
+				Path: filepath.FromSlash("testdata/parse/modules/compute.bicep"),
 				Resources: []types.Resource{
 					{
 						ID:                "Microsoft.Web/serverfarms",
@@ -110,7 +110,7 @@ func TestParseFile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ParseFile(tt.args.filename)
+			got, err := ParseFile(tt.args.filePath)
 			if (err != nil) != tt.wantErr {
 				t.Fatalf("ParseFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -140,10 +140,10 @@ func TestParseDirectory(t *testing.T) {
 			name: "testdata-parse",
 			args: args{"testdata/parse"},
 			want: types.BicepDirectory{
-				Name: "testdata/parse",
+				Path: "testdata/parse",
 				Files: []types.BicepFile{
 					{
-						Name: filepath.FromSlash("testdata/parse/azure.deploy.bicep"),
+						Path: filepath.FromSlash("testdata/parse/azure.deploy.bicep"),
 						Resources: []types.Resource{
 							{
 								ID:                "Microsoft.Resources/resourceGroups",
@@ -154,7 +154,7 @@ func TestParseDirectory(t *testing.T) {
 						},
 					},
 					{
-						Name: filepath.FromSlash("testdata/parse/modules/compute.bicep"),
+						Path: filepath.FromSlash("testdata/parse/modules/compute.bicep"),
 						Resources: []types.Resource{
 							{
 								ID:                "Microsoft.Web/serverfarms",
@@ -171,7 +171,7 @@ func TestParseDirectory(t *testing.T) {
 						},
 					},
 					{
-						Name: filepath.FromSlash("testdata/parse/modules/identity.bicep"),
+						Path: filepath.FromSlash("testdata/parse/modules/identity.bicep"),
 						Resources: []types.Resource{
 							{
 								ID:                "Microsoft.ManagedIdentity/userAssignedIdentities",

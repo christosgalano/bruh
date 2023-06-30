@@ -105,7 +105,7 @@ func scanFile() error {
 
 	switch output {
 	case "normal":
-		printFileNormal(bicepFile, bicepFile.Name, outdated, types.ModeScan)
+		printFileNormal(bicepFile, bicepFile.Path, outdated, types.ModeScan)
 	case "table":
 		printFileTable(bicepFile, outdated)
 	case "markdown":

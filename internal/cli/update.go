@@ -115,7 +115,7 @@ func updateFile() error {
 		return err
 	}
 
-	printFileNormal(bicepFile, bicepFile.Name, outdated, types.ModeUpdate)
+	printFileNormal(bicepFile, bicepFile.Path, outdated, types.ModeUpdate)
 	return nil
 }
 

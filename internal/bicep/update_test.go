@@ -23,7 +23,7 @@ func TestUpdateFile(t *testing.T) {
 			name: "valid-file",
 			args: args{
 				bicepFile: &types.BicepFile{
-					Name: filepath.FromSlash("testdata/update/azure.deploy.bicep"),
+					Path: filepath.FromSlash("testdata/update/azure.deploy.bicep"),
 					Resources: []types.Resource{
 						{
 							ID:                "Microsoft.Resources/resourceGroups",
@@ -76,10 +76,10 @@ func TestUpdateDirectory(t *testing.T) {
 			name: "testdata-update",
 			args: args{
 				bicepDirectory: &types.BicepDirectory{
-					Name: "testdata/update",
+					Path: "testdata/update",
 					Files: []types.BicepFile{
 						{
-							Name: filepath.FromSlash("testdata/update/azure.deploy.bicep"),
+							Path: filepath.FromSlash("testdata/update/azure.deploy.bicep"),
 							Resources: []types.Resource{
 								{
 									ID:                "Microsoft.Resources/resourceGroups",
@@ -96,7 +96,7 @@ func TestUpdateDirectory(t *testing.T) {
 							},
 						},
 						{
-							Name: filepath.FromSlash("testdata/update/modules/compute.bicep"),
+							Path: filepath.FromSlash("testdata/update/modules/compute.bicep"),
 							Resources: []types.Resource{
 								{
 									ID:                "Microsoft.Web/serverfarms",
@@ -131,7 +131,7 @@ func TestUpdateDirectory(t *testing.T) {
 							},
 						},
 						{
-							Name: filepath.FromSlash("testdata/update/modules/identity.bicep"),
+							Path: filepath.FromSlash("testdata/update/modules/identity.bicep"),
 							Resources: []types.Resource{
 								{
 									ID:                "Microsoft.ManagedIdentity/userAssignedIdentities",
@@ -163,17 +163,15 @@ func TestUpdateDirectory(t *testing.T) {
 			}
 
 			for _, file := range tt.args.bicepDirectory.Files {
-				filename := file.Name
-
-				exists, err := fileExists(filename)
+				exists, err := fileExists(file.Path)
 				if err != nil {
 					t.Errorf("fileExists() error = %v", err)
 				}
 				if !exists {
-					t.Errorf("UpdateDirectory() error = %v", fmt.Errorf("file %s does not exist", filename))
+					t.Errorf("UpdateDirectory() error = %v", fmt.Errorf("file %s does not exist", file.Path))
 				}
 
-				err = deleteFile(filename)
+				err = deleteFile(file.Path)
 				if err != nil {
 					t.Fatalf("deleteFile() error = %v", err)
 				}

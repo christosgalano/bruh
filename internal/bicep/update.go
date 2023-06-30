@@ -13,21 +13,15 @@ import (
 // UpdateFile receives a pointer to a BicepFile object and updates the file with the new API versions for each resource.
 // inPlace determines whether the function will update the file in place or create a new one with the suffix "_updated.bicep".
 func UpdateFile(bicepFile *types.BicepFile, inPlace bool) error {
-	file, err := os.Stat(bicepFile.Name)
+	data, err := readBicepFile(bicepFile.Path)
 	if err != nil {
-		return fmt.Errorf("failed to get file info %s", err)
-	}
-
-	data, err := os.ReadFile(bicepFile.Name)
-	if err != nil {
-		return fmt.Errorf("failed to read file %q", err)
+		return err
 	}
 	content := string(data)
 
+	// Update the API versions for each resource - if needed
 	for i := range bicepFile.Resources {
 		latestAPIVersion := bicepFile.Resources[i].AvailableAPIVersions[0]
-
-		// Update the API version if needed
 		if bicepFile.Resources[i].CurrentAPIVersion != latestAPIVersion {
 			re := regexp.MustCompile(bicepFile.Resources[i].ID + "@" + bicepFile.Resources[i].CurrentAPIVersion)
 			content = re.ReplaceAllString(content, bicepFile.Resources[i].ID+"@"+latestAPIVersion)
@@ -36,19 +30,27 @@ func UpdateFile(bicepFile *types.BicepFile, inPlace bool) error {
 
 	}
 
-	// If we don't want to update the file in place, create a new one
-	modifiedFile := bicepFile.Name
-	if !inPlace {
-		modifiedFile = strings.Replace(modifiedFile, ".bicep", "_updated.bicep", 1)
-
-		// Entry now points to the new file
-		bicepFile.Name = modifiedFile
+	// Use the same permissions as the original file
+	f, err := os.Stat(bicepFile.Path)
+	if err != nil {
+		return err
 	}
 
-	err = os.WriteFile(modifiedFile, []byte(content), file.Mode().Perm())
+	// If the file is not updated in place, create a new one with the suffix "_updated.bicep",
+	// and remove the original file from the cache
+	if !inPlace {
+		cache.Delete(bicepFile.Path)
+		bicepFile.Path = strings.Replace(bicepFile.Path, ".bicep", "_updated.bicep", 1)
+	}
+
+	// Write the updated content to the file
+	err = os.WriteFile(bicepFile.Path, []byte(content), f.Mode().Perm())
 	if err != nil {
 		return fmt.Errorf("failed to update file %s", err)
 	}
+
+	// Cache the updated file
+	cache.Store(bicepFile.Path, []byte(content))
 
 	return nil
 }
@@ -66,8 +68,7 @@ func UpdateDirectory(bicepDirectory *types.BicepDirectory, inPlace bool) error {
 		wg.Add(1)
 		go func(file *types.BicepFile, inPlace bool) {
 			defer wg.Done()
-			err := UpdateFile(file, inPlace)
-			if err != nil {
+			if err := UpdateFile(file, inPlace); err != nil {
 				results <- err
 			}
 		}(&bicepDirectory.Files[i], inPlace)

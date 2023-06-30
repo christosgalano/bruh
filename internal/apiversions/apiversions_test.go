@@ -186,7 +186,7 @@ func TestUpdateBicepFile(t *testing.T) {
 			name: "valid-file",
 			args: args{
 				bicepFile: &types.BicepFile{
-					Name: "compute.bicep",
+					Path: "compute.bicep",
 					Resources: []types.Resource{
 						{
 							ID:        "Microsoft.Web/serverFarms",
@@ -211,7 +211,7 @@ func TestUpdateBicepFile(t *testing.T) {
 			name: "invalid-file",
 			args: args{
 				bicepFile: &types.BicepFile{
-					Name: "invalid.bicep",
+					Path: "invalid.bicep",
 					Resources: []types.Resource{
 						{
 							ID:        "Microsoft.Web/invalid",
@@ -258,10 +258,10 @@ func TestUpdateBicepDirectory(t *testing.T) {
 			name: "valid-directory",
 			args: args{
 				bicepDirectory: &types.BicepDirectory{
-					Name: "compute",
+					Path: "compute",
 					Files: []types.BicepFile{
 						{
-							Name: "compute.bicep",
+							Path: "compute.bicep",
 							Resources: []types.Resource{
 								{
 									ID:        "Microsoft.Web/serverFarms",
@@ -290,10 +290,10 @@ func TestUpdateBicepDirectory(t *testing.T) {
 			name: "invalid-directory",
 			args: args{
 				bicepDirectory: &types.BicepDirectory{
-					Name: "invalid",
+					Path: "invalid",
 					Files: []types.BicepFile{
 						{
-							Name: "invalid.bicep",
+							Path: "invalid.bicep",
 							Resources: []types.Resource{
 								{
 									ID:        "Microsoft.Web/invalid",
@@ -362,7 +362,7 @@ func BenchmarkUpdateResource(b *testing.B) {
 
 func BenchmarkUpdateBicepFile(b *testing.B) {
 	bicepFile := &types.BicepFile{
-		Name: "test.bicep",
+		Path: "test.bicep",
 		Resources: []types.Resource{
 			{
 				ID:        "Microsoft.Web/serverFarms",
@@ -388,10 +388,10 @@ func BenchmarkUpdateBicepFile(b *testing.B) {
 
 func BenchmarkUpdateBicepDirectory(b *testing.B) {
 	bicepDirectory := &types.BicepDirectory{
-		Name: "test",
+		Path: "test",
 		Files: []types.BicepFile{
 			{
-				Name: "test.bicep",
+				Path: "test.bicep",
 				Resources: []types.Resource{
 					{
 						ID:        "Microsoft.Web/serverFarms",

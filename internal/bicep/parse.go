@@ -16,6 +16,8 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
+	"sync"
 
 	"github.com/christosgalano/bruh/internal/types"
 )
@@ -25,39 +27,55 @@ const (
 	pattern = `(?P<namespace>Microsoft\.[a-zA-Z]+)/(?P<resource>[a-zA-Z]+)@(?P<version>[0-9]{4}-[0-9]{2}-[0-9]{2}-preview|[0-9]{4}-[0-9]{2}-[0-9]{2})`
 )
 
-// validateBicepFile validates that a file exists and has the .bicep extension.
+var (
+	// cache is a synchronized map used to store the contents of Bicep files
+	cache sync.Map
+)
+
+// readBicepFile reads a Bicep file and returns its contents as a byte slice.
 // If the file does not exist, is a directory, or does not have the .bicep extension, the function returns an error.
-func validateBicepFile(path string) error {
-	f, err := os.Stat(path)
+func readBicepFile(filePath string) ([]byte, error) {
+	f, err := os.Stat(filePath)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			return fmt.Errorf("no such file or directory %q", path)
+			return nil, fmt.Errorf("file does not exist %q", filePath)
 		}
-		return err
+		return nil, err
 	}
 
 	if f.IsDir() {
-		return fmt.Errorf("given path is a directory %q", path)
+		return nil, fmt.Errorf("given path is a directory %q", filePath)
 	}
 
-	if ext := filepath.Ext(path); ext != ".bicep" {
-		return fmt.Errorf("invalid file extension %q", ext)
+	if ext := filepath.Ext(filePath); ext != ".bicep" {
+		return nil, fmt.Errorf("invalid file extension %q", ext)
 	}
 
-	return nil
-}
-
-// ParseFile parses a file and returns a pointer to a BicepFile object.
-func ParseFile(filename string) (*types.BicepFile, error) {
-	if err := validateBicepFile(filename); err != nil {
-		return nil, err
+	// Check if the file is already cached
+	if data, ok := cache.Load(filePath); ok {
+		return data.([]byte), nil
 	}
 
-	filename = filepath.Clean(filename)
-	data, err := os.ReadFile(filename)
+	// File is not cached, read it
+	filePath = filepath.Clean(filePath)
+	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}
+
+	// Cache the file content
+	cache.Store(filePath, data)
+
+	return data, nil
+}
+
+// ParseFile parses a file and returns a pointer to a BicepFile object.
+func ParseFile(filePath string) (*types.BicepFile, error) {
+	data, err := readBicepFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+	content := string(data)
 
 	regex, err := regexp.Compile(pattern)
 	if err != nil {
@@ -66,7 +84,7 @@ func ParseFile(filename string) (*types.BicepFile, error) {
 
 	results := []types.Resource{}
 
-	matches := regex.FindAllStringSubmatch(string(data), -1)
+	matches := regex.FindAllStringSubmatch(content, -1)
 	for _, match := range matches {
 		results = append(results, types.Resource{
 			ID:                match[1] + "/" + match[2],
@@ -77,7 +95,7 @@ func ParseFile(filename string) (*types.BicepFile, error) {
 	}
 
 	bicepFile := types.BicepFile{
-		Name:      filename,
+		Path:      filePath,
 		Resources: results,
 	}
 
@@ -85,23 +103,22 @@ func ParseFile(filename string) (*types.BicepFile, error) {
 }
 
 // ParseDirectory parses a directory and returns a pointer to a BicepDirectory object.
-func ParseDirectory(dir string) (*types.BicepDirectory, error) {
+func ParseDirectory(dirPath string) (*types.BicepDirectory, error) {
 	bicepDir := types.BicepDirectory{
-		Name: dir,
+		Path: dirPath,
 	}
 
-	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+	err := filepath.WalkDir(dirPath, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 
-		// Skip directories and non-bicep files
-		if validateBicepFile(path) != nil {
-			return nil
-		}
-
 		file, err := ParseFile(path)
 		if err != nil {
+			// Ignore directories and files with invalid extensions
+			if strings.Contains(err.Error(), "given path is a directory") || strings.Contains(err.Error(), "invalid file extension") {
+				return nil
+			}
 			return err
 		}
 		bicepDir.Files = append(bicepDir.Files, *file)
