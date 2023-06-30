@@ -3,7 +3,6 @@ package bicep
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/christosgalano/bruh/internal/types"
@@ -23,7 +22,7 @@ func TestUpdateFile(t *testing.T) {
 			name: "valid-file",
 			args: args{
 				bicepFile: &types.BicepFile{
-					Path: "testdata/update/azure.deploy.bicep"),
+					Path: "testdata/update/azure.deploy.bicep",
 					Resources: []types.Resource{
 						{
 							ID:                "Microsoft.Resources/resourceGroups",
