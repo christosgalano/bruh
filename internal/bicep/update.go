@@ -13,11 +13,17 @@ import (
 // UpdateFile receives a pointer to a BicepFile object and updates the file with the new API versions for each resource.
 // inPlace determines whether the function will update the file in place or create a new one with the suffix "_updated.bicep".
 func UpdateFile(bicepFile *types.BicepFile, inPlace bool) error {
-	data, err := readBicepFile(bicepFile.Path)
-	if err != nil {
-		return err
+	data, ok := cache.Load(bicepFile.Path)
+
+	// If the file is not cached, read it (this should never happen)
+	if !ok {
+		d, err := readBicepFile(bicepFile.Path)
+		if err != nil {
+			return err
+		}
+		data = d
 	}
-	content := string(data)
+	content := string(data.([]byte))
 
 	// Update the API versions for each resource - if needed
 	for i := range bicepFile.Resources {
@@ -49,7 +55,7 @@ func UpdateFile(bicepFile *types.BicepFile, inPlace bool) error {
 		return fmt.Errorf("failed to update file %s", err)
 	}
 
-	// Cache the updated file
+	// Cache the new content appropriately
 	cache.Store(bicepFile.Path, []byte(content))
 
 	return nil
