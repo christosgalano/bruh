@@ -19,24 +19,20 @@ concurrency:
 jobs:
   ci:
     name: ci
-    runs-on: ${{ matrix.platform }}
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       issues: read
       checks: write
       pull-requests: write
-    strategy:
-      matrix:
-        go-version: [1.20.x]
-        platform: [ubuntu-latest, macos-latest, windows-latest]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
     
-    - name: Setup Go ${{ matrix.go-version }}
+    - name: Setup Go 1.20.x
       uses: actions/setup-go@v4
       with:
-        go-version: ${{ matrix.go-version }}
+        go-version: 1.20.x
     
     - name: Install Task
       uses: arduino/setup-task@v1
@@ -81,9 +77,22 @@ jobs:
         format: markdown
         indicators: true
         thresholds: "60 80"
-        fail_below_min: false
+        fail_below_min: true
         hide_complexity: true
         hide_branch_rate: false
+
+    - name: Code coverage summary
+      if: success() || failure()
+      run: |
+        echo "## " >> $GITHUB_STEP_SUMMARY
+        cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
+    - name: Add coverage PR comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: (success() || failure()) && github.event_name == 'pull_request'
+      with:
+        path: code-coverage-results.md
+        recreate: true
 
     - name: Benchmark
       run: task benchmark
