@@ -33,6 +33,8 @@ Download the latest binary from the [releases page](https://github.com/christosg
 
 It offers two main commands: [**scan**](#scan) and [**update**](#update).
 
+> **NOTE**: bruh does not validate if your current resource declaration matches with the new API schema.
+
 ### Scan
 
 The scan command parses the given bicep file or directory, fetches the latest API versions for each Azure resource referenced in the file(s),
@@ -98,7 +100,7 @@ modules/identity_updated.bicep:
   + Updated Microsoft.ManagedIdentity/userAssignedIdentities from version 2023-01-31 to 2023-01-31
 ```
 
-**NOTE**: all the API versions are fetched from the official [Microsoft Learn website](https://learn.microsoft.com/en-us/azure/templates/).
+> **NOTE**: all the API versions are fetched from the official [Microsoft Learn website](https://learn.microsoft.com/en-us/azure/templates/).
 
 ## GitHub Action
 
