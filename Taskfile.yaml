@@ -163,6 +163,7 @@ tasks:
     aliases:
       - "govulncheck"
     cmds:
+      - govulncheck ./...
       - task build
       - govulncheck -mode=binary ./bin/bruh
     silent: true
