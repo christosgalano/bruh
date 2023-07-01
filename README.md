@@ -161,12 +161,12 @@ A complete example of scanning a bicep directory, updating the outdated files, a
 ```yaml
 validate:
   runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    defaults:
-      run:
-        shell: bash
-        working-directory: bicep
+  permissions:
+    contents: write
+  defaults:
+    run:
+      shell: bash
+      working-directory: bicep
   steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -180,18 +180,18 @@ validate:
         in-place: true
         include-preview: true
 
-      # Here we catch errors that might occur if the new API versions are not
-      # compatible with the used declarations.
-      - name: Lint template
-        run: az bicep build --file main.bicep
-
-      - name: Validate template
-        run: |
-          az deployment sub validate \
-          --name "${{ vars.DEPLOYMENT_NAME }}" \
-          --location "${{ vars.LOCATION }}" \
-          --template-file main.bicep \
-          --parameters main.parameters.json
+    # Here we catch errors that might occur if the new API versions are not
+    # compatible with the used declarations.
+    - name: Lint template
+      run: az bicep build --file main.bicep
+    
+    - name: Validate template
+      run: |
+        az deployment sub validate \
+        --name "${{ vars.DEPLOYMENT_NAME }}" \
+        --location "${{ vars.LOCATION }}" \
+        --template-file main.bicep \
+        --parameters main.parameters.json
     
     # Everything works correctly, so we can commit and push the changes.
     - name: Push changes
