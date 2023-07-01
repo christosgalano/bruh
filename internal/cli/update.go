@@ -37,14 +37,12 @@ It is possible to update the files in place or create new files with "_updated.b
 			os.Exit(1)
 		}
 
-		// Save stdout and stderr
+		// Save stdout
 		originalStdout := os.Stdout
-		originalStderr := os.Stderr
 
-		// Silent mode - close stdout and stderr
+		// Silent mode - close stdout
 		if silent {
 			err = os.Stdout.Close()
-			err = os.Stderr.Close()
 		}
 
 		// Update file or directory
@@ -54,10 +52,9 @@ It is possible to update the files in place or create new files with "_updated.b
 			err = updateFile()
 		}
 
-		// Restore stdout and stderr
+		// Restore stdout
 		if silent {
 			os.Stdout = originalStdout
-			os.Stderr = originalStderr
 		}
 
 		if err != nil {
