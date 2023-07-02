@@ -87,17 +87,25 @@ jobs:
         echo "## Code Coverage Results" >> $GITHUB_STEP_SUMMARY
         cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
-    - name: Update code coverage badge
+    - name: Update README
       if: (success() || failure()) && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+      id: update-readme
       run: |
         task coverage:badge
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add README.md
-        git commit -m "Update code coverage badge"
+        git diff --quiet --exit-code -- README.md
+        if [ $? -ne 0 ]; then
+          git add README.md
+          git commit -m "Update code coverage badge"
+          echo "changed=true" >> $GITHUB_ENV
+        fi
     
     - name: Push updated README.md
-      if: (success() || failure()) && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+      if: |
+        (success() || failure()) && 
+        (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+        steps.update-readme.outputs.changed == 'true'
       uses: ad-m/github-push-action@master
       with:
         branch: ${{ github.ref }}
