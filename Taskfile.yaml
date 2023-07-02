@@ -140,6 +140,11 @@ tasks:
       - defer: rm coverage.txt
     silent: true
 
+  coverage:badge:
+    desc: Generate coverage badge
+    cmds:
+      - .github/scripts/coverage-badge.sh
+
   #### Security ####
 
   security:
