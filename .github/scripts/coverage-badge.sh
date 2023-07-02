@@ -18,16 +18,14 @@ svg_image_url="https://img.shields.io/badge/coverage-$COVERAGE%25-$COLOR"
 
 readme_file="README.md"
 
-# Find the line number where the CI badge is located
-badge_line_number=$(grep -n "^\[!\[ci\]" "$readme_file" | cut -d: -f1)
+# Find the line number where the Code Coverage badge is located
+badge_line_number=$(grep -n "^\[!\[Code Coverage\]" "$readme_file" | cut -d: -f1)
 if [[ -z "$badge_line_number" ]]; then
-  echo "CI badge not found in $readme_file"
+  echo "Code Coverage badge not found in $readme_file"
   exit 1
 fi
 
-# Insert the SVG image URL below the CI badge
+# Replace the line containing the existing CI badge with the new badge
 cp "$readme_file" "$readme_file.tmp"
-awk -v line="$badge_line_number" -v url="$svg_image_url" 'NR==line{print; print "[![Code Coverage](" url ")](" url ")"; next}1' "$readme_file.tmp" > "$readme_file"
+awk -v line="$badge_line_number" -v url="$svg_image_url" 'NR==line{$0="[![Code Coverage](" url ")](" url ")"}1' "$readme_file.tmp" > "$readme_file"
 rm "$readme_file.tmp"
-
-echo "SVG image added below the CI badge in $readme_file"
