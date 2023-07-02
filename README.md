@@ -7,6 +7,7 @@
 - [Description](#description)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Autocompletion](#autocompletion)
 - [GitHub Action](#github-action)
 - [License](#license)
 
@@ -105,6 +106,12 @@ modules/identity_updated.bicep:
 ```
 
 > **NOTE**: all the API versions are fetched from the official [Microsoft Learn website](https://learn.microsoft.com/en-us/azure/templates/).
+
+## Autocompletion
+
+bruh provides autocompletion support. You can generate the autocompletion script for bruh specific to your shell by using the `bruh completion` command.
+
+Supported shells are `bash`, `fish`, `zsh`, and `powershell`.
 
 ## GitHub Action
 
