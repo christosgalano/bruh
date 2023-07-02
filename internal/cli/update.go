@@ -21,8 +21,8 @@ var (
 // updateCmd represents the update command.
 var updateCmd = &cobra.Command{
 	Use:   "update",
-	Short: "Update a bicep file or a directory containing bicep files",
-	Long: `Update a bicep file or a directory containing bicep files so that each Azure resource uses the latest API version available.
+	Short: "Update a Bicep file or a directory containing Bicep files.",
+	Long: `Update a Bicep file or a directory containing Bicep files so that each Azure resource uses the latest API version available.
 It is possible to update the files in place or create new files with "_updated.bicep" extension.`,
 
 	Run: func(cmd *cobra.Command, args []string) {

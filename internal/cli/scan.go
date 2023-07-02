@@ -21,8 +21,8 @@ var (
 // scanCmd represents the scan command.
 var scanCmd = &cobra.Command{
 	Use:   "scan",
-	Short: "Scan a bicep file or a directory containing bicep files",
-	Long: `Scan a bicep file or a directory containing bicep files and
+	Short: "Scan a Bicep file or a directory containing Bicep files.",
+	Long: `Scan a Bicep file or a directory containing Bicep files and
 print out information regarding the API versions of Azure resources.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Invalid output format
