@@ -34,9 +34,11 @@ tasks:
     cmds:
       - go install github.com/mgechev/revive@latest # revive for linting
       - go install gotest.tools/gotestsum@latest # gotestsum for testing
-      - go install github.com/t-yuki/gocover-cobertura@latest # gocover-cobertura for JUnit XML
-      - go install github.com/securego/gosec/v2/cmd/gosec@latest # gosec for security
+      - go install github.com/axw/gocov/gocov@latest # gocov for coverage
+      - go install github.com/AlekSi/gocov-xml@latest # gocov-xml for coverage
       - go install golang.org/x/vuln/cmd/govulncheck@latest # govulncheck for security
+      - go install github.com/securego/gosec/v2/cmd/gosec@latest # gosec for security
+
     silent: true
 
   #### Lint ####
@@ -124,10 +126,8 @@ tasks:
 
   coverage:
     desc: Generate coverage information for all packages
-    dir: ./internal
     cmds:
-      - go test -cover ./bicep
-      - go test -cover ./apiversions
+      - gocov test ./... | gocov report
     silent: true
 
   coverage:junit:
@@ -135,9 +135,7 @@ tasks:
     vars:
       FILENAME: coverage.xml
     cmds:
-      - go test -v ./... -coverprofile=coverage.txt -covermode count
-      - gocover-cobertura < coverage.txt > {{ .FILENAME }}
-      - defer: rm coverage.txt
+      - gocov test ./... | gocov-xml > {{ .FILENAME }}
     silent: true
 
   coverage:badge:
