@@ -19,9 +19,13 @@ There are several ways you can contribute to bruh:
 To ensure a productive and inclusive environment, please adhere to the following guidelines:
 
 - **Be respectful:** Treat everyone with respect and kindness. We embrace diversity and value different perspectives.
+
 - **Follow coding standards:** If you contribute code changes, maintain consistent coding style and adhere to any existing conventions.
+
 - **Provide clear and concise explanations:** When opening an issue or submitting a pull request, be explicit about the problem or proposed changes. This helps us understand your intentions better.
+
 - **Test your changes:** If applicable, include tests with your code changes to ensure they work as expected.
+
 - **Give credit:** If you include any external resources or references in your contributions, provide appropriate attribution and give credit to the original authors.
 
 ## Getting Started
