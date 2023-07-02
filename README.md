@@ -161,13 +161,6 @@ Update a bicep file in place and suppress all output:
     path: ./bicep/modules/compute.bicep
     in-place: true
     silent: true
-
-- name: Push changes
-  run: |
-    git config --global user.name 'Your Name'
-    git config --global user.email 'your-username@users.noreply.github.com'
-    git commit -am "Updated API versions of Azure resources"
-    git push
 ```
 
 A complete example of scanning a bicep directory, updating the outdated files, and pushing the changes:
