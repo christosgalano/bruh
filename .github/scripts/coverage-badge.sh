@@ -9,7 +9,7 @@ COLOR=orange
 if (( $(echo "$COVERAGE <= 50" | bc -l) )) ; then
     COLOR="FF0000"
 elif (( $(echo "$COVERAGE > 80" | bc -l) )); then
-    COLOR="34CB56"
+    COLOR="31C754"
 fi
 rm coverage.out
 
