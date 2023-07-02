@@ -1,6 +1,7 @@
 # bruh
 
 [![ci](https://github.com/christosgalano/bruh/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/christosgalano/bruh/actions/workflows/ci.yaml)
+[![Code Coverage](https://img.shields.io/badge/coverage-90.9%25-31C754)](https://img.shields.io/badge/coverage-90.9%25-31C754)
 [![Code Coverage](https://img.shields.io/badge/coverage-90.9%25-34CB56)](https://img.shields.io/badge/coverage-90.9%25-34CB56)
 
 ## Table of contents
