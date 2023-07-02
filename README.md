@@ -163,7 +163,14 @@ Update a bicep file in place and suppress all output:
     silent: true
 ```
 
-A complete example of scanning a bicep directory, updating the outdated files, and pushing the changes:
+A complete example can be found below. It consists of the following steps:
+
+1. Checkout the repository
+2. Update the API versions of Azure resources in the bicep directory (in place)
+3. Lint the main template
+4. Validate the main template
+5. Commit the changes - if any
+6. Push the changes - if needed
 
 ```yaml
 validate:
