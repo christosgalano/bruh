@@ -4,9 +4,15 @@
 
 ## Table of contents
 
+- [Description](#description)
 - [Installation](#installation)
 - [Usage](#usage)
 - [GitHub Action](#github-action)
+- [License](#license)
+
+## Description
+
+**bruh (Bicep Resource Update Helper)** is a command-line tool for scanning and updating the API version of Azure resources in Bicep files.
 
 ## Installation
 
@@ -29,9 +35,7 @@ Download the latest binary from the [releases page](https://github.com/christosg
 
 ## Usage
 
-**bruh (Bicep Resource Update Helper)** is a command-line tool for scanning and updating the API version of Azure resources in Bicep files.
-
-It offers two main commands: [**scan**](#scan) and [**update**](#update).
+bruh offers two main commands: [**scan**](#scan) and [**update**](#update).
 
 > **NOTE**: bruh does not validate if your current resource declaration matches with the new API schema.
 
@@ -203,3 +207,7 @@ validate:
         git commit -am "Updated API versions of Azure resources"
         git push
 ```
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
