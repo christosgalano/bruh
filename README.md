@@ -207,13 +207,25 @@ validate:
         --template-file main.bicep \
         --parameters main.parameters.json
     
-    # Everything works correctly, so we can commit and push the changes.
-    - name: Push changes
+    # Everything works correctly, so we can commit and push the changes - if any.
+    - name: Commit changes
+      id: check-changes
       run: |
-        git config --global user.name 'Your Name'
-        git config --global user.email 'your-username@users.noreply.github.com'
-        git commit -am "Updated API versions of Azure resources"
-        git push
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git add .
+        git commit -m "Updated API versions of Azure resources"
+        git diff --quiet --exit-code -- .
+        if [ $? -ne 0 ]; then
+          echo "changed=true" >> $GITHUB_ENV
+        fi
+    
+    - name: Push changes - if needed
+      if: steps.check-changes.outputs.changed == 'true'
+      uses: ad-m/github-push-action@master
+      with:
+        branch: ${{ github.ref }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ## License
