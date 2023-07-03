@@ -81,5 +81,11 @@ if [[ "$summary" == "--summary" ]]; then
   if [[ "$command" == "scan" && "$output" != *=markdown ]]; then
     result=$(eval "/app/bruh $command $path $include_preview $outdated --output=markdown")
   fi
+  if [[ "$command" == "update" ]]; then
+    echo "## Update results" >> "$GITHUB_STEP_SUMMARY"
+  else 
+    echo "## Scan results" >> "$GITHUB_STEP_SUMMARY"
+  fi
   echo "$result" >> "$GITHUB_STEP_SUMMARY"
+  echo "---" >> "$GITHUB_STEP_SUMMARY"
 fi

@@ -124,7 +124,7 @@ bruh can also be used as a GitHub Action to scan and update bicep files in a rep
   uses: christosgalano/bruh@v1.0.0
   with:
     command: scan | update              # command to execute (required)
-    path: ./...                         # path to the bicep file or directory (required)
+    path: ./...                         # path to the bicep file or directory (required), relative to github.workspace
     include-preview: true | false       # whether to include preview API versions (optional, default: false)
     summary: true | false               # whether to print a step summary of the results (optional, default: false)
     
@@ -189,7 +189,7 @@ validate:
       uses: christosgalano/bruh@v1.0.0
       with:
         command: update
-        path: ${{ github.workspace }}/bicep # need path relative to workspace
+        path: ./bicep # path relative to workspace
         summary: true
         in-place: true
         include-preview: true
