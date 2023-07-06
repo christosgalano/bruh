@@ -2,10 +2,9 @@ name: "bruh - Bicep Resource Update Helper"
 author: "Christos Galanopoulos"
 description: "Scan and update Bicep files with outdated API versions"
 branding:
-  icon: alert-circle
-  color: gray-dark
+  icon: refresh-cw
+  color: blue
 inputs:
-  # general
   command:
     description: "The command to run (scan or update)"
     required: true
@@ -20,8 +19,6 @@ inputs:
     description: "Show action summary"
     required: false
     default: "false"
-
-  # scan specific
   outdated:
     description: "Only show outdated resources (only for scan command)"
     required: false
@@ -30,8 +27,6 @@ inputs:
     description: "The output format (normal | table | markdown) (only for scan command)"
     required: false
     default: "normal"
-
-  # update specific
   in-place:
     description: "Overwrite the input file(s) (only for update command)"
     required: false
@@ -40,11 +35,9 @@ inputs:
     description: "Silent output (only for update command)"
     required: false
     default: "false"
-
 outputs:
   result:
     description: "The complete result from the bruh command being run"
-
 runs:
   using: "docker"
   image: "Dockerfile"
