@@ -1,9 +1,9 @@
 name: "bruh - Bicep Resource Update Helper"
-description: "lorem ipsum"
+author: "Christos Galanopoulos"
+description: "Scan and update Bicep files with outdated API versions"
 branding:
-  icon: command
-  color: gray-dark
-
+  icon: alert-triangle
+  color: yellow
 inputs:
   # general
   command:
