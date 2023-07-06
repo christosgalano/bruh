@@ -2,8 +2,8 @@ name: "bruh - Bicep Resource Update Helper"
 author: "Christos Galanopoulos"
 description: "Scan and update Bicep files with outdated API versions"
 branding:
-  icon: alert-triangle
-  color: yellow
+  icon: alert-circle
+  color: gray-dark
 inputs:
   # general
   command:
