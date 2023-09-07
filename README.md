@@ -185,7 +185,7 @@ validate:
       working-directory: bicep
   steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Update bicep directory with bruh
       uses: christosgalano/bruh@v1.0.0
