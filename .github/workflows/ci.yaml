@@ -122,4 +122,4 @@ jobs:
       run: task benchmark
     
     - name: Security
-      run: task security
+      run: task security:gosec
