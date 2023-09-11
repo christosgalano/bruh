@@ -33,7 +33,7 @@ jobs:
         run: go install github.com/anchore/syft/cmd/syft@latest
       
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v4
+        uses: goreleaser/goreleaser-action@v5
         with:
           distribution: goreleaser
           version: latest
