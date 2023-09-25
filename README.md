@@ -1,7 +1,7 @@
 # bruh
 
 [![ci](https://github.com/christosgalano/bruh/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/christosgalano/bruh/actions/workflows/ci.yaml)
-[![Code Coverage](https://img.shields.io/badge/coverage-90.9%25-31C754)](https://img.shields.io/badge/coverage-90.9%25-31C754)
+[![Code Coverage](https://img.shields.io/badge/coverage-90.3%25-31C754)](https://img.shields.io/badge/coverage-90.3%25-31C754)
 [![Go Report Card](https://goreportcard.com/badge/github.com/christosgalano/bruh)](https://goreportcard.com/report/github.com/christosgalano/bruh)
 [![Go Reference](https://pkg.go.dev/badge/github.com/christosgalano/bruh.svg)](https://pkg.go.dev/github.com/christosgalano/bruh)
 
