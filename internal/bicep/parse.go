@@ -53,7 +53,11 @@ func readBicepFile(filePath string) ([]byte, error) {
 
 	// Check if the file is already cached
 	if data, ok := cache.Load(filePath); ok {
-		return data.([]byte), nil
+		if bytesData, isBytes := data.([]byte); isBytes {
+			return bytesData, nil
+		}
+		// Handle the case where the type assertion fails
+		return nil, fmt.Errorf("unexpected type in cache for %s", filePath)
 	}
 
 	// File is not cached, read it
