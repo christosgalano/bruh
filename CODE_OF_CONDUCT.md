@@ -24,7 +24,7 @@ The following behaviors are considered unacceptable within the project community
 
 ## Reporting and Enforcement
 
-If you encounter any violations of the code of conduct or witness any unacceptable behavior, please report it to the project maintainers by contacting [EMAIL ADDRESS]. All reports will be reviewed and investigated promptly, and appropriate actions will be taken as necessary.
+If you encounter any violations of the code of conduct or witness any unacceptable behavior, please report it to the project maintainers by contacting <christosgalanop@gmail.com>. All reports will be reviewed and investigated promptly, and appropriate actions will be taken as necessary.
 
 ## Consequences
 
@@ -39,4 +39,3 @@ This code of conduct applies to all project-related spaces, including but not li
 We appreciate your commitment to creating a positive and inclusive community. By contributing to the bruh project, you are helping us maintain a welcoming environment for everyone.
 
 Thank you for your cooperation and understanding.
-
