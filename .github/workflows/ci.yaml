@@ -92,10 +92,10 @@ jobs:
       id: update-readme
       run: |
         task coverage:badge
-        git config --local user.name "github-actions[bot]"
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git diff --quiet --exit-code -- README.md
-        if [ $? -ne 0 ]; then
+        git config --local user.name 'github-actions[bot]'
+        git config --local user.email 'github-actions[bot]@users.noreply.github.com'
+        git diff --quiet --exit-code -- README.md || UPDATED=true
+        if [[ "$UPDATED" == "true" ]]; then
           git add README.md
           git commit -m "Update code coverage badge"
           echo "changed=true" >> $GITHUB_OUTPUT
