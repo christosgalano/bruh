@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/christosgalano/bruh/internal/apiversions"
 	"github.com/christosgalano/bruh/internal/bicep"
 	"github.com/christosgalano/bruh/internal/types"
-	"github.com/spf13/cobra"
 )
 
 var (
@@ -24,6 +25,7 @@ var scanCmd = &cobra.Command{
 	Short: "Scan a Bicep file or a directory containing Bicep files",
 	Long: `Scan a Bicep file or a directory containing Bicep files and
 print out information regarding the API versions of Azure resources.`,
+	//revive:disable:unused-parameter
 	Run: func(cmd *cobra.Command, args []string) {
 		// Invalid output format
 		if output != "normal" && output != "table" && output != "markdown" {

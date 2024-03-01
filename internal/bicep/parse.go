@@ -113,7 +113,7 @@ func ParseDirectory(dirPath string) (*types.BicepDirectory, error) {
 		Path: dirPath,
 	}
 
-	err := filepath.WalkDir(dirPath, func(path string, d fs.DirEntry, err error) error {
+	err := filepath.WalkDir(dirPath, func(path string, _ fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}

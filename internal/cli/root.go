@@ -28,6 +28,7 @@ It can be used to scan a Bicep file or directory and print out information regar
 bruh can also be used to update all the resources to the latest API version available either in place or by creating new files with the "_updated.bicep" extension.
 
 All the API versions are fetched from the official Microsoft Learn website (https://learn.microsoft.com/en-us/azure/templates/).`,
+	//revive:disable:unused-parameter
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("%s\n\n", cmd.Short)
 		cmd.Usage()

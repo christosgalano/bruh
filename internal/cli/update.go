@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/christosgalano/bruh/internal/apiversions"
 	"github.com/christosgalano/bruh/internal/bicep"
 	"github.com/christosgalano/bruh/internal/types"
-	"github.com/spf13/cobra"
 )
 
 var (
@@ -25,6 +26,7 @@ var updateCmd = &cobra.Command{
 	Long: `Update a Bicep file or a directory containing Bicep files so that each Azure resource uses the latest API version available.
 It is possible to update the files in place or create new files with "_updated.bicep" extension.`,
 
+	//revive:disable:unused-parameter
 	Run: func(cmd *cobra.Command, args []string) {
 		// Invalid path
 		fs, err := os.Stat(updatePath)
